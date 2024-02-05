@@ -6,9 +6,11 @@ export default function Home() {
         <ul>
           {/* development members */}
           <li>Tae Hwan Kim</li>
-
-
-
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
         </ul>
       </div>
     </main>
