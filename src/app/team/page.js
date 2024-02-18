@@ -7,7 +7,7 @@ export default function Home() {
           {/* development members */}
           <li>Tae Hwan Kim</li>
           <li>Jon Paino</li>
-          <li></li>
+          <li>Michael Ward</li>
           <li></li>
           <li></li>
           <li></li>
