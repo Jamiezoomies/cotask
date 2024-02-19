@@ -18,13 +18,22 @@ function UserProfile(uid) {
     getUserProfile(uid);
 
     return (
-        <div className="rounded-md mx-10 my-10 bg-gray-100 p-3">
-            <h2 className="text-2x1 font-bold text-gray-700 p-3 shrink">{profileData.username}</h2>
-            <div className="h-24 w-24 overflow-hidden rounded-full">
-                <img className="h-full w-full object-cover" src={profileData.image}></img>
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+            <div className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4">
+                <div className="w-1/2 mx-auto overflow-hidden rounded-full">
+                    <img className="h-full w-full object-cover" src={profileData.image}/>
+                </div>
+            <h2 className="text-xl text-center font-bold text-gray-700 pt-3">
+                {profileData.username}
+            </h2>
+            <p className="block text-center text-gray-400 text-md font-bold pb-3">
+                {profileData.email}
+            </p>
+            <hr></hr>
+            <p className="block text-gray-500 text-md font-bold break-words p-3">
+                {profileData.bio}
+            </p>
             </div>
-            <p className="block text-gray-700 text-sm font-bold p-3 shrink">{profileData.email}</p>
-            <p className="block text-gray-700 text-sm font-bold break-words p-3 shrink">{profileData.bio}</p>
         </div>
     );
 }
