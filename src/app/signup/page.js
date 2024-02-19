@@ -1,13 +1,13 @@
-"use client";
+import SignupForm from "../components/signup-form"
+import { redirectAuthorized } from "../utils/actions";
 
-import Signup from "../components/signup"
+export default async function SignUp() {
+  const user = await redirectAuthorized('/home')
 
-export default function SignUp() {
-
-    return (
-      <>
-        <Signup/>
-      </>
-    )
-  }
+  return (
+    <>
+      <SignupForm/>
+    </>
+  )
+}
   

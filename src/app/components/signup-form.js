@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+'use client'
 
-function Signup() {
+import React, { useState } from 'react';
+import { handleSignUp } from "@/app/utils/actions"
+
+function SignupForm() {
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
-        firstName: '',
-        lastName: ''
+        firstname: '',
+        lastname: ''
     });
+    const [message, setMessage] = useState('')
+    const REGISTER_API_URL = '/api/register-user'
 
     const handleChange = (e) => {
         setFormData({
@@ -18,28 +23,32 @@ function Signup() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle the form submission, such as sending data to a backend server
-        console.log(formData);
+        fetch(REGISTER_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application.json'},
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                setMessage("The user has been successfully registered.")
+                return response.json()
+            } else {
+                setMessage("The user register has been failed.")
+                throw new Error()
+            }
+        })
+        .then(data => {
+            handleSignUp(data)
+        })
+        .catch(error => {
+            setMessage("An error occurred: " + error)
+        })
     };
 
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
                 <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Sign Up</h2>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Username
-                    </label>
-                    <input 
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="username" 
-                        type="text" 
-                        name="username" 
-                        value={formData.username} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                         Email
@@ -69,29 +78,43 @@ function Signup() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
-                        First Name
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                        Username
                     </label>
                     <input 
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="firstName" 
+                        id="username" 
                         type="text" 
-                        name="firstName" 
-                        value={formData.firstName} 
+                        name="username" 
+                        value={formData.username} 
                         onChange={handleChange} 
                         required 
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstname">
+                        First Name
+                    </label>
+                    <input 
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                        id="firstname" 
+                        type="text" 
+                        name="firstname" 
+                        value={formData.firstname} 
+                        onChange={handleChange} 
+                        required 
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">
                         Last Name
                     </label>
                     <input 
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="lastName" 
+                        id="lastname" 
                         type="text" 
-                        name="lastName" 
-                        value={formData.lastName} 
+                        name="lastname" 
+                        value={formData.lastname} 
                         onChange={handleChange} 
                         required 
                     />
@@ -101,9 +124,14 @@ function Signup() {
                         Sign Up
                     </button>
                 </div>
+                <div>
+                    <p className="min-w-md">
+                        { message }
+                    </p>
+                </div>
             </form>
         </div>
     );
 }
 
-export default Signup;
+export default SignupForm;
