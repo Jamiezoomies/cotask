@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { handleSignIn } from "@/app/utils/actions"
+import { handleSignIn } from '../utils/actions';
 
 function SigninForm() {
     const SIGNIN_API_URL = '/api/signin-user'

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { handleSignUp } from "@/app/utils/actions"
+import { handleSignUp } from '../utils/actions';
 
 function SignupForm() {
     const [formData, setFormData] = useState({
