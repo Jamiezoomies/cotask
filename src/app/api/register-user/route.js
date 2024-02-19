@@ -1,4 +1,4 @@
-import pool from "@/app/utils/database"
+import pool from "/src/app/utils/database"
 import bcrypt from 'bcryptjs'
 
 
