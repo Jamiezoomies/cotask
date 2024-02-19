@@ -1,4 +1,5 @@
-export default function Home() {
+export default function Team() {
+
   return (
     <main>
       <div className="p-5">
