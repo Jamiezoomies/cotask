@@ -1,4 +1,7 @@
+'use client'
+
 import React, { useState } from 'react';
+import { handleSignUp } from "@/app/utils/actions"
 
 function SignupForm() {
     const [formData, setFormData] = useState({
@@ -10,6 +13,7 @@ function SignupForm() {
     });
     const [message, setMessage] = useState('')
     const REGISTER_API_URL = '/api/register-user'
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -27,9 +31,14 @@ function SignupForm() {
         .then(response => {
             if (response.ok) {
                 setMessage("The user has been successfully registered.")
+                return response.json()
             } else {
                 setMessage("The user register has been failed.")
+                throw new Error()
             }
+        })
+        .then(data => {
+            handleSignUp(data)
         })
         .catch(error => {
             setMessage("An error occurred: " + error)
