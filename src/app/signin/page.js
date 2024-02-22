@@ -1,8 +1,7 @@
-import SigninForm from "../components/signin-form"
-import { redirectAuthorized } from "../utils/actions";
+import { SigninForm } from "../components/sign"
 
-export default async function SignIn() {
-    const user = await redirectAuthorized('/home')
+export default function SignIn() {
+    //const user = await redirectAuthorized('/home')
 
     return (
         <>

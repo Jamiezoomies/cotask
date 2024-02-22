@@ -1,4 +1,4 @@
-import pool from "/src/app/utils/database"
+import pool from "../middleware/database"
 import bcrypt from 'bcryptjs'
 
 
@@ -21,22 +21,21 @@ export async function POST ( req ){
 
 
     try{
-        const lookup_response = await pool.query(lookup_query, [email])
-        if (lookup_response.rowCount > 0) {
-            return new Response(null, { status: 409 })    
+        const lookupResponse = await pool.query(lookup_query, [email])
+        if (lookupResponse.rowCount > 0) {
+            return new Response(null, { status: 409, statusText: "The user already exists."})    
         }
         
         const { rowCount, rows } = await pool.query(insert_query, values);
         if (rowCount > 0) {
-            console.log(rows[0])
-            return new Response(JSON.stringify(rows[0]), { status: 201 })
-        } else {
-            return new Response(null, { status: 400 })
+            return new Response(JSON.stringify(rows[0]), { status: 201, statusText: "The user has been registered."})
         }
+        
+        return new Response(null, { status: 500, statusText: "The error has occurred while inserting and returning data." })
         
     } catch (error) {
         console.log(error)
-        return new Response('', { status: 500 })
+        return new Response(null, { status: 500, statusText: "The internal error has occurred."})
     }
 }
 
