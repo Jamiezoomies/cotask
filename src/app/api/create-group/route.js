@@ -27,8 +27,7 @@ export async function POST(req) {
             await pool.query(insertUserGroupQuery, [userId, channelId])
             await pool.query('COMMIT')
             return new Response(JSON.stringify(rows[0]), { status: 201, statusText: "The group has been created."})   
-        }
-        
+        }   
     } catch (error) {
         await pool.query('ROLLBACK')
         console.log(error)
