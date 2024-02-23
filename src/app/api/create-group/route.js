@@ -21,7 +21,7 @@ export async function POST(req) {
         if (rowCount > 0) {
             const channelId = rows[0].id
             const insertUserGroupQuery = `
-            INSERT INTO Users_Channels (user_id, channel_id)
+            INSERT INTO UsersChannels (user_id, channel_id)
             VALUES ($1, $2)
             RETURNING *`
             await pool.query(insertUserGroupQuery, [userId, channelId])
