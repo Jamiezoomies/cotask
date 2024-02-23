@@ -1,16 +1,16 @@
-import { getGroups } from "../lib/actions"
-import { Message } from "../components/message"
-export default async function GroupPage() {
-    const response = await getGroups()
-    
+
+import { GroupList } from "../components/group"
+
+export default function GroupPage() {
+
     return (
         <>
-            <Message isError={ !response.ok } text={ response?.msg }/>
-            <ul>
-                {response?.data?.map(group => 
-                    <li key={group.id}>{group.name} {group.description} {group.join_url} {group.created_at}</li>
-                )}
-            </ul>
+            <div className="min-h-screen flex">
+                <GroupList/>
+                <div className="flex p-4">
+                    
+                </div>
+            </div>
         </>
     )
 }
