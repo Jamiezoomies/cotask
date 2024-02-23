@@ -19,7 +19,7 @@ export async function GET(req) {
         const { rowCount, rows } = await pool.query(getGroupsQuery, [userId])
         if (rowCount > 0) {
             return new Response(JSON.stringify(rows), 
-                { status: 200, statusText: `${rowCount} groups has been found.`})
+            { status: 200, statusText: `${rowCount} groups have been found.`})
         } 
         
         return new Response(null, { status: 404, statusText: "No group has been found."})
