@@ -3,6 +3,7 @@ import { protectFromUnauthorized } from "../lib/actions";
 export default async function ProtectedPage() {
     const session = await protectFromUnauthorized()
     const username = session?.username
+    console.log(session)
     
     if (!username) {
         return (

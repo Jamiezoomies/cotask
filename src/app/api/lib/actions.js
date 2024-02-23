@@ -25,14 +25,20 @@ async function getClaimFromJwtToken(token) {
 }
 
 function getJwtTokenFromHeaders(headers, type) {
+    if (!headers) {
+        return null
+    }
+
     const authorizationHeader = headers.get('Authorization')
     let token
 
     if (authorizationHeader && authorizationHeader.startsWith(`${type} `)) {
         token = authorizationHeader.substring(type.length + 1)
-    }
+        return token
+    } 
+    console.log(token)
 
-    return token
+    return null
 }
 
 

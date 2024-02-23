@@ -9,6 +9,8 @@ const BASE_URL = process.env.BASE_URL
 const REGISTER_API_URL = '/api/register-user'
 const SIGNIN_API_URL = '/api/signin-user'
 const SESSION_API_URL = '/api/session'
+const GROUP_CREATE_API_URL = '/api/create-group'
+const GET_GROUPS_API_URL = '/api/get-groups'
 const TOKEN_TYPE = 'Bearer'
 
 async function handleSignIn(formData) {    
@@ -110,5 +112,55 @@ async function redirectAuthorizedTo(url) {
     }
 }
 
+async function createGroup(formData) {
+    const data = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+    }
 
-export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo}
+    const response = await fetch(BASE_URL + GROUP_CREATE_API_URL, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application.json',
+            'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+        },
+        body: JSON.stringify(data)
+    })
+
+    var result = {}
+    if (response.status === 201) {
+        result = { ok: true, msg: response.statusText, data: await response.json()};
+    } else if ([401, 500].includes(response.status)) {
+        result = { ok: false, msg: response.statusText, data: null};
+    } else {
+        result = { ok: false, msg: "Unexpected error has occurred" };
+    }
+
+    return result
+}
+
+async function getGroups() {
+    try{
+        const response = await fetch(BASE_URL + GET_GROUPS_API_URL, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application.json',
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+            }
+        })
+
+        var result = {}
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText, data: await response.json()};
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText, data: null};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    return result
+}
+export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups}
