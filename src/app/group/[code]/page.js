@@ -1,6 +1,6 @@
 
 import { GroupList } from "../../components/group"
-import { TaskList } from "../../components/task"
+import { TaskList, CreateTask} from "../../components/task"
 
 export default function GroupPage({ params }) {
     
@@ -11,6 +11,7 @@ export default function GroupPage({ params }) {
                 <div className="flex flex-col p-4">
                     <p>{ params.code }</p>
                     <TaskList channel={params.code}/>
+                    <CreateTask channel={params.code}/>
                 </div>
             </div>
         </>

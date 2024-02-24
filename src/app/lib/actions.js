@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 const URL_SIGNIN = '/signin'
-const URL_LOGOUT = '/logout2'
+const URL_LOGOUT = '/logout'
 
 const BASE_URL = process.env.BASE_URL
 const REGISTER_API_URL = '/api/register-user'
@@ -166,12 +166,13 @@ async function getGroups() {
     return result
 }
 
-async function createTask(formData) {
+async function createTask(channel, formData) {
     try{
         const data = {
-            name: formData.get('title'),
+            code: channel,
+            title: formData.get('title'),
             description: formData.get('description'),
-            description: formData.get('due_date'),
+            dueDate: formData.get('due_date'),
         }
 
         const response = await fetch(BASE_URL + TASK_CREATE_API_URL, {
@@ -194,6 +195,7 @@ async function createTask(formData) {
     } catch (error) {
         console.log(error)
     }
+    console.log(result)
     return result
 }
 
