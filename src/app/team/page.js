@@ -9,7 +9,7 @@ export default function Team() {
           <li>Tae Hwan Kim</li>
           <li>Jon Paino</li>
           <li>Michael Ward</li>
-          <li></li>
+          <li>Justin Morgan</li>
           <li></li>
           <li></li>
         </ul>
