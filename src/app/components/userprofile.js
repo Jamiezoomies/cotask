@@ -1,21 +1,22 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
+import { getUserProfile } from "../lib/actions"
 
-function UserProfile(uid) {
-    let profileData = {};
-    
-    //Implement some API fetch request for specific user profile data
-    //This data should include their profile image link, email, username, and bio
-    const getUserProfile = (uid) => {
-        //Dummy version
-        profileData = {
-            "image": 'https://tr.rbxcdn.com/70108dc7da4e002c8e5d2c1dcf0825fb/420/420/Hat/Png',
-            "email": 'johndoe@gmail.com',
-            "username": 'The_Real_John_Doe',
-            "bio": 'Just a guy looking to collab and get yolked! I go to the gym three times a day and do not rest... ever'
+function UserProfile() {
+    const [profileData, setProfileData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await getUserProfile(); 
+            if (result.ok) {
+                setProfileData(result.data);
+            } else {
+                console.error(result.msg);
+            }
         };
-    }
 
-    getUserProfile(uid);
+        fetchData();
+    }, []);
 
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">

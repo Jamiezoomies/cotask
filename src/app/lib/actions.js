@@ -13,6 +13,7 @@ const GROUP_CREATE_API_URL = '/api/create-group'
 const GET_GROUPS_API_URL = '/api/get-groups'
 const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
+const GET_USERPROFILE_API_URL = '/api/get-userprofile'
 
 const TOKEN_TYPE = 'Bearer'
 async function handleSignIn(formData) {    
@@ -166,6 +167,34 @@ async function getGroups() {
     return result
 }
 
+async function getUserProfile() {
+    try {
+        const token = cookies().get('jwt')?.value; 
+        const response = await fetch(BASE_URL + GET_USERPROFILE_API_URL, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${token}` 
+            }
+        });
+
+        var result = {};
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText, data: await response.json()};
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText, data: null};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred", data: null };
+        }
+    } catch (error) {
+        console.log(error);
+        result = { ok: false, msg: error.toString(), data: null };
+    }
+
+    return result;
+}
+
+
 async function createTask(channel, formData) {
     try{
         const data = {
@@ -226,4 +255,4 @@ async function getTasks(code) {
     return result
 }
 
-export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, createTask, getTasks}
+export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, createTask, getTasks}
