@@ -14,6 +14,7 @@ export async function GET ( req ) {
         }
     } catch (error) {
         console.error("Error while verifying JWT token:", error);
+        return new Response(null, { status: 500, statusText: "An unknown error has occurred." });
     }
 
     return new Response(null, { status: 401, statusText: "The session seems expired." });

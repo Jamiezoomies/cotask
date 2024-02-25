@@ -5,8 +5,12 @@ import bcrypt from 'bcryptjs'
 export async function POST ( req ){
     const {email, password, username, firstname, lastname} = await req.json()
 
-    if (!isValidEmail(email) || !isValidPassword(password)) {
-        return new Response(null, { status: 400 })
+    if (!isValidEmail(email)) {
+        return new Response(null, { status: 400, statusText: "Oops! The email is not valid format." })
+    }
+
+    if (!isValidPassword(password)) {
+        return new Response(null, { status: 400, statusText: "Oops! The password must be at least 8 characters long." })
     }
 
     const saltRounds = 10
@@ -35,7 +39,7 @@ export async function POST ( req ){
         
     } catch (error) {
         console.log(error)
-        return new Response(null, { status: 500, statusText: "The internal error has occurred."})
+        return new Response(null, { status: 500, statusText: "An unexpected error has occurred."})
     }
 }
 
