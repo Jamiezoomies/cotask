@@ -7,8 +7,8 @@ export default function Team() {
         <ul>
           {/* development members */}
           <li>Tae Hwan Kim</li>
-          <li></li>
-          <li></li>
+          <li>Jon Paino</li>
+          <li>Michael Ward</li>
           <li></li>
           <li></li>
           <li></li>
