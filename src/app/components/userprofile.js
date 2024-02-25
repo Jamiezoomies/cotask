@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { getUserProfile } from "../lib/actions"
 
 function UserProfile() {
-    const [profileData, setProfileData] = useState(null);
+    const [profileData, setProfileData] = useState({username: '', email: '', image: '', bio: ''});
+    const [isLoading, setisLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,11 +14,14 @@ function UserProfile() {
             } else {
                 console.error(result.msg);
             }
+            setisLoading(false);
         };
 
         fetchData();
     }, []);
-
+    if(isLoading){
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <div className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4">

@@ -15,10 +15,9 @@ export default async function handler(req, res) {
     const userId = claim.id;
 
     const query = `
-    SELECT Users.username, Users.email, UserProfile.image, UserProfile.bio 
-    FROM Users 
-    INNER JOIN UserProfile ON Users.id = UserProfile.user_id 
-    WHERE Users.id = $1`;
+    SELECT username, email, profile_picture AS image, bio
+    FROM Users
+    WHERE id = $1`;
 
     try {
         const { rows } = await pool.query(query, [userId]);
