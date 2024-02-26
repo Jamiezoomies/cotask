@@ -1,4 +1,4 @@
-import HomePageGuests from "./components/homepage-guest.js"
+import HomePageGuests from "../components/homepage-guest.js"
 
 export default async function HomePage() {
 
