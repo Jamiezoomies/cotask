@@ -1,8 +1,9 @@
-import SigninForm from "../components/signin-form"
-import { redirectAuthorized } from "../utils/actions";
+import { SigninForm } from "../components/sign"
+import { getSession } from "../lib/actions";
 
-export default async function SignIn() {
-    const user = await redirectAuthorized('/home')
+export default async function SignInPage() {
+    const session = await getSession()
+    if (!session || session?.ok) { return null }
 
     return (
         <>

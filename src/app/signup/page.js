@@ -1,12 +1,14 @@
-import SignupForm from "../components/signup-form"
-import { redirectAuthorized } from "../utils/actions";
+import { SignupForm } from "../components/sign"
+import { getSession, redirectTo } from "../lib/actions";
 
 export default async function SignUp() {
-  const user = await redirectAuthorized('/home')
+  
+  const session = await getSession()
+  if (!session || session?.ok) { return null }
 
   return (
     <>
-      <SignupForm/>
+      <SignupForm />
     </>
   )
 }
