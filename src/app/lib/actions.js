@@ -14,6 +14,7 @@ const GET_GROUPS_API_URL = '/api/get-groups'
 const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const GET_USERPROFILE_API_URL = '/api/get-userprofile'
+const GET_INVITE_URL_API = '/api/get-joinurl'
 
 const TOKEN_TYPE = 'Bearer'
 async function handleSignIn(formData) {    
@@ -257,7 +258,30 @@ async function getTasks(code) {
     return result
 }
 
-async function inviteUser(groupCode){
+async function inviteUser(code) {
+    try {
+        const params = `?code=${code}`;
+        const response = await fetch(BASE_URL + GET_INVITE_URL_API + params, { 
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+            }
+        });
 
+        let result = {};
+        if (response.status === 200) {
+            const data = await response.json();
+            result = { ok: true, msg: response.statusText, data: data };
+        } else if ([400, 401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText, data: null };
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+        return result;
+    } catch (error) {
+        console.log("Error fetching invite URL:", error);
+        return { ok: false, msg: "Error occurred while fetching invite URL" };
+    }
 }
 export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, createTask, getTasks, inviteUser}
