@@ -7,6 +7,7 @@ import { TaskList, CreateTask } from "../../components/task"
 export default function GroupPage({ params }) {
 
     const [joinURL, setJoinURL] = useState('');
+    const [isLoading, setisLoading] = useState(true);
 
     const invite = async () => {
         try {
@@ -15,8 +16,11 @@ export default function GroupPage({ params }) {
         } catch (error) {
             console.error("Error inviting user:", error);
         }
+        setisLoading(false);
     };
-    
+    if(isLoading){
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
     return (
         <>
             <div className="min-h-screen flex">
