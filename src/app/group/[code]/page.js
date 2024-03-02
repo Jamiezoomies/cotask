@@ -6,8 +6,9 @@ import { TaskList, CreateTask } from "../../components/task"
 
 export default function GroupPage({ params }) {
 
-    const [joinURL, setJoinURL] = useState('');
+    const [joinURL, setJoinURL] = useState(null);
     const [isLoading, setisLoading] = useState(true);
+    const [currentTask, setCurrentTask] = useState(null);
 
     const invite = async () => {
         try {
@@ -27,8 +28,9 @@ export default function GroupPage({ params }) {
                 <GroupList/>
                 <div className="flex flex-col p-4">
                     <p>{ params.code }</p>
-                    <TaskList channel={params.code}/>
+                    <TaskList channel={params.code} onEditTask={setCurrentTask} />
                     <CreateTask channel={params.code}/>
+                    {currentTask && <EditTask channel={params.code} task={currentTask} onCancel={() => setCurrentTask(null)} />}
                     <button 
                         className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out"
                         onClick={invite}

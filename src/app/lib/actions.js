@@ -15,6 +15,7 @@ const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const GET_USERPROFILE_API_URL = '/api/get-userprofile'
 const GET_INVITE_URL_API = '/api/get-joinurl'
+const TASK_UPDATE_API_URL = '/api/edit-task'
 
 const TOKEN_TYPE = 'Bearer'
 async function handleSignIn(formData) {    
@@ -258,6 +259,40 @@ async function getTasks(code) {
     return result
 }
 
+async function editTask(channel, task, formData) {
+    try {
+        const data = {
+            code: channel,
+            title: formData.title,
+            description: formData.description,
+            dueDate: formData.dueDate,
+        };
+
+        const response = await fetch(BASE_URL + TASK_UPDATE_API_URL + `/${task.id}`, {
+            method: 'PUT', 
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        var result = {};
+        if (response.status === 200) { 
+            result = { ok: true, msg: response.statusText, data: await response.json()};
+        } else if ([401, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText, data: null};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch (error) {
+        console.log(error);
+        result = { ok: false, msg: "An error occurred while updating the task." };
+    }
+    console.log(result);
+    return result;
+}
+
 async function inviteUser(code) {
     try {
         const params = `?code=${code}`;
@@ -284,4 +319,4 @@ async function inviteUser(code) {
         return { ok: false, msg: "Error occurred while fetching invite URL" };
     }
 }
-export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, createTask, getTasks, inviteUser}
+export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, createTask, getTasks, inviteUser, editTask}
