@@ -1,9 +1,10 @@
 
 'use client'
 import { useEffect, useState } from "react"
-import { GroupList } from "../../components/group"
-import { TaskList, CreateTask} from "../../components/task"
+import { GroupDetailsModal, GroupList } from "../../components/group"
+import { TaskList, CreateTask, TaskCreationModal} from "../../components/task"
 import { redirectTo, getSession } from "../../lib/actions"
+import { usePathname } from 'next/navigation'
 
 export default function SpecificGroupPage({ params }) {
     const [session, setSession] = useState()
@@ -32,9 +33,10 @@ export default function SpecificGroupPage({ params }) {
             <div className="min-h-screen flex">
                 <GroupList/>
                 <div className="flex flex-col p-4">
+                    <GroupDetailsModal join_url= { usePathname() }/>
                     <p>{ params.code }</p>
                     <TaskList channel={params.code}/>
-                    <CreateTask channel={params.code}/>
+                    <TaskCreationModal />
                 </div>
             </div>
         </>
