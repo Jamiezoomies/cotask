@@ -13,7 +13,11 @@ const GET_TASKS_API_URL = '/api/get-tasks'
 
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
-const AUTH_TOKEN = `${TOKEN_TYPE} ${cookies().get(SESSION_COOKIE_NAME)?.value}`
+
+function getAuth() {
+    const auth = `${TOKEN_TYPE} ${cookies().get(SESSION_COOKIE_NAME)?.value}`
+    return auth
+}
 
 async function handleSignIn(formData) {    
     try {
@@ -78,9 +82,8 @@ async function getSession() {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Authorization': getAuth()
             }})
-        
         if (response.status === 200) {
             return {ok: true, msg: response.statusText, session: await response.json()};
         } else if ([401, 500].includes(response.status)){
@@ -93,7 +96,7 @@ async function getSession() {
     return {ok: false, msg: "An unknown error has occurred", session: null};
 }
 
-function redirectTo(url){
+async function redirectTo(url){
     redirect(BASE_URL + url)
 }
 
@@ -108,7 +111,7 @@ async function createGroup(formData) {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Authorization': getAuth()
             },
             body: JSON.stringify(data)
         })
@@ -131,7 +134,7 @@ async function getGroups() {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN}})
+                'Authorization': getAuth() }})
 
         if (response.status === 200) {
             return { ok: true, msg: response.statusText, data: await response.json()};
@@ -158,7 +161,7 @@ async function createTask(channel, formData) {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Authorization': getAuth()
             },
             body: JSON.stringify(data)})
 
@@ -181,7 +184,7 @@ async function getTasks(code) {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Authorization': getAuth()
             }
         })
         

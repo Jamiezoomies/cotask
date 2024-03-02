@@ -12,7 +12,6 @@ async function createJwtToken(data) {
     }
 
     const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: JWT_COOKIE_EXPIRY })
-    console.log(token)
     return token
 }
 
@@ -28,16 +27,13 @@ function getJwtTokenFromHeaders(headers, type) {
     if (!headers) {
         return null
     }
-
+    
     const authorizationHeader = headers.get('Authorization')
-    let token
 
     if (authorizationHeader && authorizationHeader.startsWith(`${type} `)) {
-        token = authorizationHeader.substring(type.length + 1)
-        return token
+        return authorizationHeader.substring(type.length + 1)
+        
     } 
-    console.log(token)
-
     return null
 }
 

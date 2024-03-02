@@ -1,26 +1,27 @@
 'use client'
-import { useEffect, useState } from "react"
-import { createGroup, protectFromUnauthorized } from "../../lib/actions"
+import { useState, useEffect } from "react"
+import { createGroup, getSession, redirectTo } from "../../lib/actions"
 import { Message } from "../../components/message"
-
 export default function GroupCreationPage() {
     const [session, setSession] = useState(null)
     const [response, setResponse] = useState(null)
-
     useEffect(() => {
         (async () => {
-            setSession(await protectFromUnauthorized())
+            const response = await getSession()
+            console.log(response)
+            setSession(response)
         })()
-
     }, [])
+    
     
     async function create (formData) {
         setResponse(await createGroup(formData))
+        if (response.ok) {
+            redirectTo('/group/'+response?.data?.join_url)
+        }
     }
 
-    if (!session) {
-        return null
-    }
+    if (!session || !session?.ok) { return null }
 
     return (
         <>

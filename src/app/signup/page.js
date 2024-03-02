@@ -1,10 +1,12 @@
+import { redirect } from "next/navigation";
 import { SignupForm } from "../components/sign"
-import { getSession, redirectTo } from "../lib/actions";
+import { getSession } from "../lib/actions";
 
 export default async function SignUp() {
-  
   const session = await getSession()
-  if (!session || session?.ok) { return null }
+  if (!session || session?.ok) { 
+    redirect('/group')
+  }
 
   return (
     <>

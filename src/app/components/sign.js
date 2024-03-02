@@ -111,8 +111,8 @@ function SigninForm() {
 
     async function signin(formData) {
         setResponse(await handleSignIn(formData))
-        const session = await getSession()
-        if (session?.ok) {
+
+        if (response?.ok) {
             redirectTo('/group')
         }
     }
