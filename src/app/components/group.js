@@ -1,7 +1,16 @@
+'use client'
+import { useState, useEffect} from "react"
 import { getGroups } from "../lib/actions"
 
-async function GroupList() {
-    const response = await getGroups()
+function GroupList() {
+    const [response, setResponse] = useState()
+    
+    useEffect(()=>{
+        (async() => {
+            setResponse(await getGroups())
+        })()
+
+    }, [])
     
     return (
         <div className="bg-gray-900 w-64 text-white p-4">

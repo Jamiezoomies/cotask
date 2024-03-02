@@ -2,7 +2,6 @@ import { getClaimFromJwtToken, getJwtTokenFromHeaders } from "../lib/actions"
 
 export async function GET ( req ) {
     const token = getJwtTokenFromHeaders(req.headers, 'Bearer')
-
     if (!token) {
         return new Response(null, { status: 401, statusText: "The session seems expired." });
     }
