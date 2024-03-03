@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react"
-import { getTasks, createTask } from "../lib/actions"
+import { getTasks, createTask, editTask } from "../lib/actions"
 import { Message } from "../components/message"
 
 function TaskList({ channel, onEditTask }) {
@@ -94,26 +94,17 @@ function CreateTask({ channel }) {
 
 function EditTask({ channel, task, onCancel }) {
 
-    const [title, setTitle] = useState(task.title);
-    const [description, setDescription] = useState(task.description);
-    const [dueDate, setDueDate] = useState(task.dueDate); 
-    const [response, setResponse] = useState(null);
-
-
-    const edit = (e) => {
-        e.preventDefault(); 
-        const formData = { title, description, dueDate };
-        const response = editTask(channel, task, formData); 
-        setResponse(response);
+    async function edit(formData) {
+        const response = await editTask(channel, task, formData)
         if (response.ok) {
             onCancel(); 
         }
-    };
+    }
 
     return (
         <div>
             <Message isError={!response?.ok} text={response?.msg}/>
-            <form onSubmit={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form action={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Edit task</h2>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
@@ -123,8 +114,7 @@ function EditTask({ channel, task, onCancel }) {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        defaultValue={response.title}
                         required
                     />
                 </div>
@@ -135,8 +125,7 @@ function EditTask({ channel, task, onCancel }) {
                     <textarea
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
                         name="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        defaultValue={response.description}
                         required
                     />
                 </div>
@@ -148,8 +137,7 @@ function EditTask({ channel, task, onCancel }) {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
                         type="date" 
                         name="dueDate"
-                        value={dueDate}
-                        onChange={(e) => setDueDate(e.target.value)}
+                        defaultValue={response.dueDate}
                     />
                 </div>
                 <div className="flex items-center justify-between">
@@ -157,7 +145,7 @@ function EditTask({ channel, task, onCancel }) {
                         Cancel
                     </button>
                     <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Submit Edit
+                        Save
                     </button>
                 </div>
             </form>

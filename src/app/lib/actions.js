@@ -328,9 +328,9 @@ async function editTask(channel, task, formData) {
     try {
         const data = {
             code: channel,
-            title: formData.title,
-            description: formData.description,
-            dueDate: formData.dueDate,
+            title: formData.get('title'),
+            description: formData.get('description'),
+            dueDate: formData.get('dueDate'),
         };
 
         const response = await fetch(BASE_URL + TASK_UPDATE_API_URL + `/${task.id}`, {
