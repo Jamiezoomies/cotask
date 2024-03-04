@@ -4,6 +4,7 @@ import { getTasks, createTask } from "../lib/actions"
 import { Message } from "../components/message"
 import { Modal, ToggleModalButton } from "../components/modal"
 
+
 function TaskList({ channel }) {
     const [response, setResponse] = useState(null)
     
@@ -37,12 +38,11 @@ function TaskList({ channel }) {
     )
 }
 
-function CreateTask({ channel }) {
+function TaskCreation({ channel }) {
     const [response, setResponse] = useState(null)
 
-    function create (formData) {
-        console.log(channel)
-        setResponse(createTask(channel, formData))
+    async function create (formData) {
+        setResponse(await createTask(channel, formData))
     }
 
     return (
@@ -90,60 +90,7 @@ function CreateTask({ channel }) {
     )
 }
 
-function TaskCreation() {
-    const [response, setResponse] = useState(null)
-
-    function create (formData) {
-        console.log(channel)
-        setResponse(createTask(channel, formData))
-    }
-
-    return (
-        <div>
-            <Message isError={!response?.ok} text={response?.msg}/>
-            <form action={create} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Add a task</h2>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
-                        Task Title
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id='title'
-                        type="text"
-                        name="title"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Task Description</label>
-                    <textarea
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="description"
-                        name="description"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="due_date">Due Date</label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="due_date"
-                        type="date" 
-                        name="due_date"
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Create a task
-                    </button>
-                </div>
-            </form>
-        </div>
-    )
-}
-
-function TaskCreationModal() {
+function TaskCreationModal({ channel }) {
     const [isModalOpen, setModalOpen] = useState(false)
 
     function toggleModal () {
@@ -154,10 +101,10 @@ function TaskCreationModal() {
         <>
             <ToggleModalButton label="Create a task" onClick={toggleModal} />
             <Modal isOpen={isModalOpen} onClose={toggleModal} title="Create a task">
-                <TaskCreation/>
+                <TaskCreation channel={channel}/>
             </Modal>
         </>
     )
 }
 
-export { TaskList, CreateTask, TaskCreation, TaskCreationModal}
+export { TaskList, TaskCreation, TaskCreationModal}

@@ -1,8 +1,8 @@
 
 'use client'
 import { useEffect, useState } from "react"
-import { GroupDetailsModal, GroupList } from "../../components/group"
-import { TaskList, CreateTask, TaskCreationModal} from "../../components/task"
+import { GroupDetailsModal, GroupList, JoinGroupButton} from "../../components/group"
+import { TaskList, TaskCreationModal} from "../../components/task"
 import { redirectTo, getSession } from "../../lib/actions"
 import { usePathname } from 'next/navigation'
 
@@ -28,15 +28,17 @@ export default function SpecificGroupPage({ params }) {
         return null
     }
 
+
     return (
         <>
             <div className="min-h-screen flex">
                 <GroupList/>
                 <div className="flex flex-col p-4">
-                    <GroupDetailsModal join_url= { usePathname() }/>
                     <p>{ params.code }</p>
+                    <GroupDetailsModal join_url= { usePathname() }/>
+                    <TaskCreationModal channel={params.code}/>
                     <TaskList channel={params.code}/>
-                    <TaskCreationModal />
+                    <JoinGroupButton code={params.code}/>
                 </div>
             </div>
         </>
