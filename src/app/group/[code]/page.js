@@ -3,15 +3,29 @@
 import { useEffect, useState } from "react"
 import { GroupDetailsModal, GroupList, JoinGroupButton} from "../../components/group"
 import { TaskList, TaskCreationModal} from "../../components/task"
-import { redirectTo, getSession } from "../../lib/actions"
+import { redirectTo, getSession, getTasks, getGroup} from "../../lib/actions"
 import { usePathname } from 'next/navigation'
 
 export default function SpecificGroupPage({ params }) {
     const [session, setSession] = useState()
+    const [tasks, setTasks] = useState()
+    const [group, setGroup] = useState()
+
     useEffect(()=>{
         (async() => {
-            const res = await getSession()
-            setSession(res)
+            const response1 = await getSession()
+            setSession(response1)
+            
+            const response2 = await getTasks(params.code)
+            if (response2?.ok){
+                setTasks(response2.data)
+            }
+
+            const response3 = await getGroup(params.code)
+            if (response3?.ok) {
+                setGroup(response3.data)
+            }
+
             
         })()
     }, [])
@@ -19,10 +33,10 @@ export default function SpecificGroupPage({ params }) {
     useEffect(() => {
         if (session && !session?.ok){
             redirectTo('/signin')
-        }     
+        }
+
     }, [session])
 
-    
     
     if (!session || !session?.ok) {
         return null
@@ -35,39 +49,12 @@ export default function SpecificGroupPage({ params }) {
                 <GroupList/>
                 <div className="flex flex-col p-4">
                     <p>{ params.code }</p>
-                    <GroupDetailsModal join_url= { usePathname() }/>
+                    <GroupDetailsModal group={group} />
                     <TaskCreationModal channel={params.code}/>
-                    <TaskList channel={params.code}/>
+                    <TaskList channel={params.code} tasks={tasks}/>
                     <JoinGroupButton code={params.code}/>
                 </div>
             </div>
         </>
     )
 }
-
-/*
-const SESSION_API_URL = '/api/session'
-const TOKEN_TYPE = 'Bearer'
-const SESSION_COOKIE_NAME = 'jwt'
-
-async function getSession() {
-    try {
-        const response = await fetch(SESSION_API_URL, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `${TOKEN_TYPE} ${cookies.get(SESSION_COOKIE_NAME)}`
-            }})
-        if (response.status === 200) {
-            return {ok: true, msg: response.statusText, session: await response.json()};
-        } else if ([401, 500].includes(response.status)){
-            return {ok: false, msg: response.statusText, session: null};
-        }
-    } catch (error) {
-        console.log(error)
-    }
-
-    return {ok: false, msg: "An unknown error has occurred", session: null};
-}
-
-*/

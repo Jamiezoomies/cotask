@@ -27,6 +27,15 @@ export async function POST(req) {
     
         const channelId = channelFound.rows[0].id;
 
+        const userFoundInChannelQuery = `
+        SELECT * FROM UsersChannels 
+        WHERE user_id=$1 and channel_id=$2`
+
+        const userFoundInChannel = await pool.query(userFoundInChannelQuery, [userId, channelId])
+        if (userFoundInChannel.rows.length !== 0) {
+            return new Response(null, {status: 409, statusText: `The user ${userId} is already a member of the channel ${channelId}`})
+        }
+
         const insertUserChannel = `
         INSERT INTO UsersChannels (user_id, channel_id) 
         VALUES ($1, $2)
@@ -35,7 +44,7 @@ export async function POST(req) {
         const insertResult = await pool.query(insertUserChannel, [userId, channelId])
         
         if (insertResult.rows.length !== 0) {
-            return new Response(insertResult.rows[0], {status: 201, statusText: `The User ${userId} has joined the group using the url, ${code}`})
+            return new Response(JSON.stringify(insertResult.rows[0]), {status: 201, statusText: `The User ${userId} has joined the group using the url, ${code}`})
         }
         
     } catch (error) {

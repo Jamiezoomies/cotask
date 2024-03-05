@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from "react"
-import { getGroups, createGroup, JoinGroup } from "../lib/actions"
+import { getGroups, createGroup, joinGroup } from "../lib/actions"
 import { Modal, ToggleModalButton } from "../components/modal"
 import { Message } from "./message"
 import QRCode from 'qrcode'
@@ -101,9 +101,8 @@ function GroupCreationModal() {
     )
 }
 
-function GroupDetailsModal({ join_url }) {
+function GroupDetailsModal({ group }) {
     const [isModalOpen, setModalOpen] = useState(false)
-
     function toggleModal () {
         setModalOpen(!isModalOpen)
     }
@@ -111,18 +110,20 @@ function GroupDetailsModal({ join_url }) {
     return (
         <>
             <ToggleModalButton label="Group Channel Info" onClick={toggleModal} />
-            <Modal isOpen={isModalOpen} onClose={toggleModal} title="Group Channel Detail">
-                <GroupDetails join_url= { join_url }/>
+            <Modal isOpen={isModalOpen} onClose={toggleModal} title={group?.name}>
+                <GroupDetails group= { group }/>
             </Modal>
         </> 
     )
 }
 
-function GroupDetails({ join_url }) {
+function GroupDetails({ group }) {
     return (
         <>
-            <p>{ join_url }</p>
-            <QRCodeComponent url={ join_url }/>
+            <p>{ group?.description }</p>
+            <p>{ group?.created_at }</p>
+            <p>{ group?.join_url }</p>
+            <QRCodeComponent url={ group?.join_url }/>
         </>
     )
 }
@@ -144,9 +145,7 @@ function QRCodeComponent({ url }) {
 function JoinGroupButton(code) {
     
     async function join() {
-        console.log(code)
-        const response = await JoinGroup(code)
-        console.log(response)
+        const response = await joinGroup(code)
     }
     return (
         <button onClick={ join }>Join Group</button>

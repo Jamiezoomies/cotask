@@ -7,11 +7,12 @@ const REGISTER_API_URL = '/api/register-user'
 const SIGNIN_API_URL = '/api/signin-user'
 const SESSION_API_URL = '/api/session'
 const GROUP_CREATE_API_URL = '/api/create-group'
+const GET_GROUP_API_URL = '/api/get-group'
 const GET_GROUPS_API_URL = '/api/get-groups'
 const TASK_CREATE_API_URL = '/api/create-task'
+const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const JOIN_GROUP_API_URL = '/api/join-group'
-
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
 
@@ -150,7 +151,30 @@ async function getGroups() {
     return { ok: false, msg: "Unexpected error has occurred", data: null};
 }
 
-async function JoinGroup(data) {
+async function getGroup(code) {
+    try {
+        const params = `?code=${code}`
+        const response = await fetch(BASE_URL + GET_GROUP_API_URL + params, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            return { ok: true, msg: response.statusText, data: await response.json()}
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+
+async function joinGroup(data) {
     let response
     
     try {
@@ -164,7 +188,7 @@ async function JoinGroup(data) {
         
         if (response.status === 201) {
             return { ok: true, msg: response.statusText, data: await response.json()};
-        } else if ([400, 401, 404, 500].includes(response.status)) {
+        } else if ([400, 401, 404, 409, 500].includes(response.status)) {
             return { ok: false, msg: response.statusText, data: null};
         }
     } catch (error) {
@@ -226,6 +250,27 @@ async function getTasks(code) {
     return { ok: false, msg: "Unexpected error has occurred", data: null }
 }
 
+async function getTask(code, id) {
+    try {
+        const params = `?code=${code}&id=${id}`
+        const response = await fetch(BASE_URL + GET_TASK_API_URL + params, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            return { ok: true, msg: response.statusText, data: await response.json()}
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 // Archived
 // Redirect unauthorized users to `sign-in` and return the session.
@@ -274,4 +319,4 @@ async function redirectAuthorizedTo(url) {
     }
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, JoinGroup, createTask, getTasks}
+export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask}
