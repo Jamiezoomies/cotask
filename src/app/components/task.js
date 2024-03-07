@@ -8,7 +8,15 @@ import { Modal, ToggleModalButton } from "../components/modal"
 function TaskList({ channel, tasks }) {
     const [isEditorOpen, setEditorOpen] = useState(false)
     const [selectedTaskId, setSelectedTaskId] = useState()
+    const [completedTasks, setCompletedTasks] = useState({}); // Initalize the completion status of all tasks to be empty (false)
     
+    // set the selected task to be the inverse upon clicking "complete"
+    const toggleCompletedTasks = (taskId) => {
+        setCompletedTasks((prevTasks) => ({
+            ...prevTasks,
+            [taskId] : !prevTasks[taskId]
+        }));
+    };
     return (
         <div className="bg-gray-900 text-white">
             <Modal isOpen={isEditorOpen} onClose={()=>setEditorOpen(false)} title={"Edit Task"}>
@@ -21,12 +29,15 @@ function TaskList({ channel, tasks }) {
                 {tasks?.map(task => (
                     <li 
                         key={task.id} 
-                        className="flex items-center py-2 hover:bg-gray-700 cursor-pointer"
+                        className={`flex items-center py-2 cursor-pointer ${completedTasks[task.id] ? 'bg-gray-500' : 'hover:bg-green-700'}`}
                         onClick={()=>{ setSelectedTaskId(task.id); setEditorOpen(true) }}
                     >
+                        <button onClick={() => toggleCompletedTasks(task.id)} className="text-xs font-semibold mr-2 p-1 bg-blue-500 hover:bg-blue-700 rounded">
+                            {completedTasks[task.id] ? 'Complete' : 'Completed'}
+                        </button>
                         <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
                         <div className="flex flex-col flex-grow">
-                            <span className="text-sm font-medium">{task.title}</span>
+                            <span className={`text-sm font-medium ${completedTasks[task.id] ? 'line-through' : ''}`}>{task.title}</span>
                             <span className="text-xs text-gray-400">{task.description}</span>
                         </div>
                     </li>
