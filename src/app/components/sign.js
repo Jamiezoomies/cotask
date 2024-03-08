@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { handleSignIn, handleLogout, handleSignUp, redirectTo } from "../lib/actions"
 import { Message } from "../components/message"
 import { getSession } from "../lib/actions";
+import { useSearchParams } from "next/navigation";
 
 function SignupForm() {
     const [response, setResponse] = useState(null)
@@ -106,15 +107,24 @@ function SignupForm() {
     )
 }
 
-function SigninForm() {
+function SigninForm({ session }) {
     const [response, setResponse] = useState(null)
+    const destination_url = useSearchParams().get('destination_url')
+
+    useEffect(()=>{
+        (async()=>{
+            if (!session || session?.ok) { 
+                if (destination_url){
+                    redirectTo('/group/'+destination_url+'/join')
+                } else {
+                    redirectTo('/group')
+                }
+            }
+        })()
+    }, [session])
 
     async function signin(formData) {
-        setResponse(await handleSignIn(formData))
-
-        if (response?.ok) {
-            redirectTo('/group')
-        }
+        setResponse(await handleSignIn(formData))        
     }
     
     return (
@@ -150,6 +160,9 @@ function SigninForm() {
                     <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Sign In
                     </button>
+                </div>
+                <div className="py-2">
+                    <p className="text-sm text-blue">Not registered? <a className="text-indigo-900 bg-indigo-200" href="/signup">Sign up</a></p>
                 </div>
             </form>
         </div>

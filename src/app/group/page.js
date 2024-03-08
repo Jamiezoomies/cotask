@@ -1,14 +1,14 @@
 
+import { redirect } from "next/navigation"
 import { GroupList } from "../components/group"
-import { getSession, redirectTo, getGroups } from "../lib/actions"
+import { getSession, getGroups } from "../lib/actions"
 
 export default async function GroupPage() {
     const session = await getSession()
     const groups = await getGroups()
 
     if (!session || !session?.ok) {
-        redirectTo('/signin')
-        return null
+        redirect('/signin')
     }
 
     return (

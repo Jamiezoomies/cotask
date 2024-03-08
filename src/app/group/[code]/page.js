@@ -9,7 +9,7 @@ export default async function SpecificGroupPage({ params }) {
     const group = await getGroup(params.code)
     
     if (session && !session?.ok){
-        redirect('/signin')
+        redirect(`/signin?destination_url=${params.code}`)
     }
 
     return (
