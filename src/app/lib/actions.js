@@ -13,6 +13,7 @@ const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const EDIT_TASK_API_URL = '/api/edit-task'
+const DELETE_TASK_API_URL = '/api/delete-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
@@ -304,6 +305,30 @@ async function editTask(formData, code, id) {
     return result
 }
 
+async function deleteTask(code, id) {
+    try {
+        const params = `?code=${code}&id=${id}`;
+        const response = await fetch(BASE_URL + DELETE_TASK_API_URL + params, {
+            method: 'DELETE',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        });
+        
+        if (response.status === 200) {
+            return { ok: true, msg: response.statusText, data: null};
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null};
+        }
+
+    } catch (error) {
+        console.error(error);
+        return { ok: false, msg: 'Network or server error', data: null};
+    }
+}
+
+
 // Archived
 // Redirect unauthorized users to `sign-in` and return the session.
 async function protectFromUnauthorized() {    
@@ -351,4 +376,4 @@ async function redirectAuthorizedTo(url) {
     }
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}
+export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask, deleteTask}

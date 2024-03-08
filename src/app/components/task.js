@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect } from "react"
-import { getTasks, createTask, getTask } from "../lib/actions"
+import { getTasks, createTask, getTask} from "../lib/actions"
 import { Message } from "../components/message"
 import { Modal, ToggleModalButton } from "../components/modal"
 
 
-function TaskList({ channel, tasks }) {
+function TaskList({ channel, tasks, onDeleteTask }) {
     const [isEditorOpen, setEditorOpen] = useState(false)
     const [selectedTaskId, setSelectedTaskId] = useState()
     const [completedTasks, setCompletedTasks] = useState({}); // Initalize the completion status of all tasks to be empty (false)
@@ -17,6 +17,7 @@ function TaskList({ channel, tasks }) {
             [taskId] : !prevTasks[taskId]
         }));
     };
+
     return (
         <div className="bg-gray-900 text-white">
             <Modal isOpen={isEditorOpen} onClose={()=>setEditorOpen(false)} title={"Edit Task"}>
@@ -30,10 +31,19 @@ function TaskList({ channel, tasks }) {
                     <li 
                         key={task.id} 
                         className={`flex items-center py-2 cursor-pointer ${completedTasks[task.id] ? 'bg-gray-500' : 'hover:bg-green-700'}`}
-                        onClick={()=>{ setSelectedTaskId(task.id); setEditorOpen(true) }}
+                        onClick={() => { setSelectedTaskId(task.id); setEditorOpen(true); }}
                     >
-                        <button onClick={() => toggleCompletedTasks(task.id)} className="text-xs font-semibold mr-2 p-1 bg-blue-500 hover:bg-blue-700 rounded">
-                            {completedTasks[task.id] ? 'Complete' : 'Completed'}
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); toggleCompletedTasks(task.id); }} // stopPropogation prevents the onClick of the <li> from being called
+                            className="text-xs font-semibold mr-2 p-1 bg-blue-500 hover:bg-blue-700 rounded"
+                        >
+                            {completedTasks[task.id] ? 'Completed' : 'Mark as Complete'}
+                        </button>
+                        <button 
+                            onClick={async (e) => { e.stopPropagation(); await onDeleteTask(task.id);}}
+                            className="text-xs font-semibold mr-2 p-1 bg-red-500 hover:bg-red-700 rounded"
+                        >
+                            Delete
                         </button>
                         <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
                         <div className="flex flex-col flex-grow">

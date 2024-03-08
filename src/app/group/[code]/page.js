@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { GroupDetailsModal, GroupList, JoinGroupButton} from "../../components/group"
 import { TaskList, TaskCreationModal} from "../../components/task"
-import { redirectTo, getSession, getTasks, getGroup} from "../../lib/actions"
+import { redirectTo, getSession, getTasks, getGroup, deleteTask} from "../../lib/actions"
 import { usePathname } from 'next/navigation'
 
 export default function SpecificGroupPage({ params }) {
@@ -37,6 +37,15 @@ export default function SpecificGroupPage({ params }) {
 
     }, [session])
 
+    const onDeleteTask = async (taskId) => {
+        const response = await deleteTask(params.code, taskId);
+        if (response?.ok) {
+            setTasks(currentTasks => currentTasks.filter(task => task.id !== taskId));
+        } else {
+            console.error("Failed to delete the task");
+        }
+    };
+
     
     if (!session || !session?.ok) {
         return null
@@ -51,7 +60,7 @@ export default function SpecificGroupPage({ params }) {
                     <p>{ params.code }</p>
                     <GroupDetailsModal group={group} />
                     <TaskCreationModal channel={params.code}/>
-                    <TaskList channel={params.code} tasks={tasks}/>
+                    <TaskList channel={params.code} tasks={tasks} onDeleteTask={onDeleteTask}/>
                     <JoinGroupButton code={params.code}/>
                 </div>
             </div>
