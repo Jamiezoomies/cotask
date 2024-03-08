@@ -228,9 +228,9 @@ async function createTask(channel, formData) {
     return { ok: false, msg: "Unexpected error has occurred", data: null }
 }
 
-async function getTasks(code) {
+async function getTasks(code, status) {
     try{
-        const params = `?code=${code}`
+        const params = `?code=${code}${status != null ? `&status=${status}` : ''}`;
         const response = await fetch(BASE_URL + GET_TASKS_API_URL + params, {
             method: 'GET',
             headers: { 
@@ -257,7 +257,6 @@ async function getTask(code, id) {
         const response = await fetch(BASE_URL + GET_TASK_API_URL + params, {
             method: 'GET',
             headers: { 
-                'Content-Type': 'application/json',
                 'Authorization': getAuth()
             }
         })
@@ -273,12 +272,7 @@ async function getTask(code, id) {
     }
 }
 
-async function editTask(formData, code, id) {
-    const data = {
-        title: formData.get('title'),
-        description: formData.get('description'),
-        dueDate: formData.get('due_date')
-    }
+async function editTask(data, code, id) {
     try{
         const params = `?code=${code}&id=${id}`
         const response = await fetch(BASE_URL + EDIT_TASK_API_URL + params, {
@@ -289,7 +283,6 @@ async function editTask(formData, code, id) {
             },
             body: JSON.stringify(data)
         })
-
         var result = {}
         if (response.status === 201) {
             result = { ok: true, msg: response.statusText };
@@ -304,51 +297,5 @@ async function editTask(formData, code, id) {
     return result
 }
 
-// Archived
-// Redirect unauthorized users to `sign-in` and return the session.
-async function protectFromUnauthorized() {    
-    const URL_SIGNIN = '/signin'
-
-    try {
-        const response = await fetch(BASE_URL + SESSION_API_URL, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
-            }
-        })
-
-        if (response.status === 200) {
-            return await response.json()
-        }
-        
-    } catch (error) {
-        console.log(error)
-    }
-    
-    redirect(BASE_URL+URL_SIGNIN)
-}
-
-// Archived
-// Direct authorized users to `url`.
-async function redirectAuthorizedTo(url) {
-    const URL_LOGOUT = '/logout'
-    try {
-        const response = await fetch(BASE_URL + SESSION_API_URL, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
-            }
-        })
-        
-        if (response.status === 200) {
-            redirect(BASE_URL+url)
-        }
-
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}
+export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, 
+    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}

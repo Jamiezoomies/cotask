@@ -29,8 +29,9 @@ export async function GET(req) {
         WHERE Channels.join_url = $1 AND UsersChannels.user_id = $2`
 
     const getTaskQuery = `
-        SELECT Tasks.* FROM Tasks
+        SELECT Tasks.*, Users.username, Users.email, Users.first_name, Users.last_name FROM Tasks
         INNER JOIN Channels On Tasks.channel_id = Channels.id
+        INNER JOIN Users On Tasks.created_by = Users.id
         WHERE Tasks.id = $1`
 
     
@@ -46,6 +47,7 @@ export async function GET(req) {
         }
 
         const { rowCount, rows } = await pool.query(getTaskQuery, [taskId])
+        console.log(rows)
         if (rowCount > 0) {
             return new Response(JSON.stringify(rows[0]),
             {status: 200, statusText: `A task has been found.`})

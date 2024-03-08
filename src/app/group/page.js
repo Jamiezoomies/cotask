@@ -1,9 +1,10 @@
 
 import { GroupList } from "../components/group"
-import { getSession, redirectTo } from "../lib/actions"
+import { getSession, redirectTo, getGroups } from "../lib/actions"
 
 export default async function GroupPage() {
     const session = await getSession()
+    const groups = await getGroups()
 
     if (!session || !session?.ok) {
         redirectTo('/signin')
@@ -13,7 +14,7 @@ export default async function GroupPage() {
     return (
         <>
             <div className="min-h-screen flex">
-                <GroupList/>
+                <GroupList groups={groups?.data}/>
                 <div className="flex flex-col p-4">
                 </div>
             </div>
