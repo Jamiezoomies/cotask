@@ -12,13 +12,13 @@ export async function POST(req) {
     const hashedPassword = await bcrypt.hash(password, saltRounds)
     const defaultImage = 'https://tr.rbxcdn.com/70108dc7da4e002c8e5d2c1dcf0825fb/420/420/Hat/Png'
     const defaultBio = 'This is a default bio.'
-    const userValues = [email, hashedPassword, username, firstname, lastname, /*defaultImage, */defaultBio]
+    const userValues = [email, hashedPassword, username, firstname, lastname, defaultImage, defaultBio]
     
     const lookup_query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
     const insert_user_query = `
-    INSERT INTO Users (email, password_hash, username, first_name, last_name, bio)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING id, username, email, first_name, last_name, bio` //profile_picture
+    INSERT INTO Users (email, password_hash, username, first_name, last_name, profile_picture_url, bio)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING id, username, email, first_name, last_name, profile_picture_url, bio`
 
     try {
         const lookupResponse = await pool.query(lookup_query, [email])

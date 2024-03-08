@@ -17,7 +17,7 @@ export async function GET(req, res) {
     const userId = claim.id;
 
     const query = `
-    SELECT username, email, bio
+    SELECT username, email, profile_picture_url AS image, bio
     FROM Users
     WHERE id = $1`;
 // profile_picture AS image,

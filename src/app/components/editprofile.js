@@ -27,10 +27,38 @@ function EditProfile() {
         fetchData();
     }, []);
 
+    function previewProfilePicture(fileSubmit) {
+        const img = document.querySelector("img");
+        const file = document.getElementById("profile_img").files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener(
+          "load", () => {
+                img.src = reader.result;
+            },
+            false
+        );
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     async function saveChanges(formData) {
-        const response = await updateUserProfile(formData)
-        setError(!response.ok)
-        setMessage(response.msg)
+        const reader = new FileReader()
+
+        reader.addEventListener(
+            "load", async () => {
+                formData.append('image_base64', reader.result.replace("data:image/png;base64,", ""));
+                const response = await updateUserProfile(formData)
+                setError(!response.ok)
+                setMessage(response.msg)
+            },
+            false
+        );
+
+        if (formData.get('profile_img')) {
+            reader.readAsDataURL(formData.get('profile_img'));
+        }
     }
 
     if(isLoading){
@@ -40,8 +68,20 @@ function EditProfile() {
         <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
             <Message isError={isError} text={message}/>
             <form className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4" action={saveChanges}>
-                <div className="w-1/2 mx-auto overflow-hidden rounded-full">
-                    <img className="h-full w-full object-cover" src={profileData.image}/>
+                <div className="relative w-1/2 mx-auto overflow-hidden rounded-full bg-black">
+                    <label for="profile_img">
+                        <img className="peer h-full w-full object-cover hover:opacity-50" src={profileData.image}/>
+                        <p className="absolute pointer-events-none invisible peer-hover:visible block w-full top-1/2 object-cover text-center text-gray-400 text-md px-3">Upload Photo</p>
+                    </label>
+                    <input className="absolute hidden"
+                       id="profile_img"
+                       type="file"
+                       accept="image/*"
+                       height="420"
+                       width="420"
+                       name="profile_img"
+                       onChange={() => previewProfilePicture(this)}
+                    />
                 </div>
                 <input className="shadow appearance-none border rounded w-full text-xl text-center font-bold text-gray-700 pt-3 focus:outline-none focus:shadow-outline"
                     id="username"

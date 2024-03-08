@@ -202,6 +202,7 @@ async function getUserProfile() {
 
 async function updateUserProfile(formData) {
     const data = {
+        image_data: formData.get('image_base64'),
         username: formData.get('username'),
         bio: formData.get('bio')
     }
