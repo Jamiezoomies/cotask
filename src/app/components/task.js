@@ -107,6 +107,7 @@ function TaskCreationModal({ channel }) {
 
 function TaskEditor({ channel, id }) {
     const [task, setTask] = useState()
+    const [response, setResponse] = useState();
     
     useEffect(()=> {
         (async()=>{
@@ -118,8 +119,9 @@ function TaskEditor({ channel, id }) {
         })()
     }, [])
 
-    async function edit (formData) {
-
+    async function edit (formData, channel, id) {
+        const response = await editTask(formData, channel, id)
+        setResponse(response);
     }
 
     return (
@@ -160,7 +162,7 @@ function TaskEditor({ channel, id }) {
             </div>
             <div className="flex items-center justify-between">
                 <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Create a task
+                Edit task
                 </button>
             </div>
         </form>

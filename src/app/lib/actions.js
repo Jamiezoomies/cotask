@@ -12,6 +12,7 @@ const GET_GROUPS_API_URL = '/api/get-groups'
 const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
+const EDIT_TASK_API_URL = '/api/edit-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
@@ -272,6 +273,37 @@ async function getTask(code, id) {
     }
 }
 
+async function editTask(formData, code, id) {
+    const data = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        dueDate: formData.get('due_date')
+    }
+    try{
+        const params = `?code=${code}&id=${id}`
+        const response = await fetch(BASE_URL + EDIT_TASK_API_URL + params, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            },
+            body: JSON.stringify(data)
+        })
+
+        var result = {}
+        if (response.status === 201) {
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
 // Archived
 // Redirect unauthorized users to `sign-in` and return the session.
 async function protectFromUnauthorized() {    
@@ -319,4 +351,4 @@ async function redirectAuthorizedTo(url) {
     }
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask}
+export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}
