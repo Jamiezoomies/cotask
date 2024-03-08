@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react"
-import { createTask, getTask, editTask, getTasks } from "../lib/actions"
+import { createTask, getTask, editTask, getTasks, deleteTask} from "../lib/actions"
 import { Message } from "../components/message"
 import { Modal } from "../components/modal"
 
@@ -160,7 +160,6 @@ function TaskEditor({ channel, id, onClose}) {
             dueDate: formData.get('due_date') || null,
             status: taskStatus,
         }
-        console.log(data)
 
         const edited = await editTask(data, channel, id)
         setResponse(edited);
@@ -172,6 +171,7 @@ function TaskEditor({ channel, id, onClose}) {
     return (
         <>
             <Message isError={!response?.ok} text={response?.msg}/>
+            <TaskDeleteButton channel={channel} id={task?.id} onClose={onClose}/>
             <form action={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Edit a task</h2>
                 <div className="mb-4">
@@ -257,4 +257,16 @@ function TaskEditor({ channel, id, onClose}) {
     )
 }
 
-export { TaskList, TaskCreation, TaskBoard}
+function TaskDeleteButton({ channel, id, onClose}) {
+    async function handleDelete() {
+        const response = await deleteTask(channel, id)
+        if (response.ok) {
+            onClose()
+        }
+    } 
+    return (
+        <button className="text-sm bg-purple-900 border border-purple-400 border-purple-400 text-purple-400 rounded-md px-2 py-1"onClick={handleDelete}>Delete</button>
+    )
+}
+
+export { TaskList, TaskCreation, TaskBoard, TaskDeleteButton}

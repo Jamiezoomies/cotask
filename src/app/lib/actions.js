@@ -13,6 +13,7 @@ const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const EDIT_TASK_API_URL = '/api/edit-task'
+const DELETE_TASK_API_URL = '/api/delete-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
@@ -297,5 +298,28 @@ async function editTask(data, code, id) {
     return result
 }
 
+async function deleteTask(channel, id) {
+    try{
+        const params = `?channel=${channel}&id=${id}`
+        const response = await fetch(BASE_URL + DELETE_TASK_API_URL + params, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': getAuth()
+            }
+        })
+        var result = {}
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
 export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, 
-    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}
+    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask, deleteTask}

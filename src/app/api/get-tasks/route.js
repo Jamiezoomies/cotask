@@ -19,11 +19,11 @@ export async function GET(req) {
     const userId = claim.id 
 
     const selectChannel = `
-        SELECT id FROM Channels 
+        SELECT * FROM Channels 
         WHERE Channels.join_url = $1`
         
     const selectChannelWithUser = `
-        SELECT id FROM Channels 
+        SELECT Channels.* FROM Channels 
         INNER JOIN UsersChannels ON Channels.id = UsersChannels.channel_id 
         WHERE Channels.join_url = $1 AND UsersChannels.user_id = $2`
 
@@ -40,7 +40,15 @@ export async function GET(req) {
 
     
     try {
+        const channelFound = await pool.query(selectChannel, [code])
+        if (channelFound.rowCount === 0) {
+            return new Response(null, {status: 404, statusText: "The channel is not found"})
+        }
         
+        const channelFoundWithUser = await pool.query(selectChannelWithUser, [code, userId])
+        if (channelFoundWithUser.rowCount === 0) {
+            return new Response(null, {status: 403, statusText: "The channel is found, but you are not a member"})
+        }
 
         const { rowCount, rows } = await pool.query(getTasksQuery, tasksQueryParams)
         if (rowCount > 0) {
