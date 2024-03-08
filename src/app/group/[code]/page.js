@@ -18,7 +18,7 @@ export default async function SpecificGroupPage({ params }) {
                 <GroupList groups={groups?.data}/>
                 <div className="flex flex-col p-4">
                     <p>{ params.code }</p>
-                    <GroupDetailsModal group={group?.data} />
+                    <GroupDetailsModal pageUrl={process.env.BASE_URL} group={group?.data} />
                     <TaskBoard channel={params.code}/>
                 </div>
             </div>

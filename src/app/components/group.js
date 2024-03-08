@@ -95,7 +95,7 @@ function GroupCreationModal() {
     )
 }
 
-function GroupDetailsModal({ group }) {
+function GroupDetailsModal({ pageUrl, group }) {
     const [isModalOpen, setModalOpen] = useState(false)
     function toggleModal () {
         setModalOpen(!isModalOpen)
@@ -105,19 +105,20 @@ function GroupDetailsModal({ group }) {
         <>
             <ToggleModalButton label="Group Channel Info" onClick={toggleModal} />
             <Modal isOpen={isModalOpen} onClose={toggleModal} title={group?.name}>
-                <GroupDetails group= { group }/>
+                <GroupDetails pageUrl={pageUrl} group={group}/>
             </Modal>
         </> 
     )
 }
 
-function GroupDetails({ group }) {
+function GroupDetails({ pageUrl, group }) {
+    const url = `${pageUrl}/group/${group?.join_url}/join`
     return (
         <>
             <p>{ group?.description }</p>
             <p>{ group?.created_at }</p>
-            <p>{ group?.join_url }</p>
-            <QRCodeComponent url={ group?.join_url }/>
+            <p>{url}</p>
+            <QRCodeComponent url={url}/>
         </>
     )
 }

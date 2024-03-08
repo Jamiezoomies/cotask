@@ -47,7 +47,7 @@ export async function GET(req) {
         }
 
         const { rowCount, rows } = await pool.query(getTaskQuery, [taskId])
-        console.log(rows)
+        
         if (rowCount > 0) {
             return new Response(JSON.stringify(rows[0]),
             {status: 200, statusText: `A task has been found.`})
