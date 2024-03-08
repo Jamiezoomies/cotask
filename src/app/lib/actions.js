@@ -239,9 +239,9 @@ async function getTasks(code) {
         })
         
         if (response.status === 200) {
-            return { ok: true, msg: response.statusText, data: await response.json()}
+            return { ok: true, status: response.status, msg: response.statusText, data: await response.json()}
         } else if ([400, 401, 403, 404, 500].includes(response.status)) {
-            return { ok: false, msg: response.statusText, data: null}
+            return { ok: false, status: response.status, msg: response.statusText, data: null}
         }
     } catch (error) {
         console.log(error)

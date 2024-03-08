@@ -7,6 +7,7 @@ import { redirectTo, getSession, getTasks, getGroup} from "../../lib/actions"
 import { usePathname } from 'next/navigation'
 
 export default function SpecificGroupPage({ params }) {
+    const pathname = usePathname()
     const [session, setSession] = useState()
     const [tasks, setTasks] = useState()
     const [group, setGroup] = useState()
@@ -24,6 +25,8 @@ export default function SpecificGroupPage({ params }) {
             const response3 = await getGroup(params.code)
             if (response3?.ok) {
                 setGroup(response3.data)
+            } else {
+                redirectTo(`${pathname}/join`)
             }
 
             
@@ -41,6 +44,8 @@ export default function SpecificGroupPage({ params }) {
     if (!session || !session?.ok) {
         return null
     }
+
+    
 
 
     return (

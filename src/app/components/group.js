@@ -148,7 +148,7 @@ function JoinGroupButton(code) {
         const response = await joinGroup(code)
     }
     return (
-        <button onClick={ join }>Join Group</button>
+        <button className="bg-purple-400 hover:bg-purple-600 text-white rounded p-4 shadow-md" onClick={ join }>Join Group</button>
     )
 }
 

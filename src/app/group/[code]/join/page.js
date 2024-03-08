@@ -5,7 +5,7 @@ import { JoinGroupButton } from "../../../components/group"
 
 export default function Join({ params }) {
     const [session, setSession] = useState(null)
-    const [msg, setMsg] = useState(null)
+    const [isMember, setIsMember] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -20,21 +20,33 @@ export default function Join({ params }) {
             console.log(params.code)
             if (session && session?.ok) {
                 const response = await getTasks(params.code)
-                console.log(response)
-                setMsg(response.msg)
-            } else {
-                setMsg("Session dead")
+                if (response?.status === 403) {
+                    setIsMember(false)
+                    setMsg(response.msg)
+                } else {
+                    setIsMember(true)
+                }
             }
         })()
     }, [session])
     
+    
+
     return (
-        <>
-            <p>is this user a member of the channel?</p>
-            <p>{msg}</p>
-            <JoinGroupButton code={params.code}/>
-        </>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+            <h1 className="text-4xl font-bold">Welcome to Our Channel!</h1>
+            { !isMember ? (
+            <>
+                <p className="mt-2 text-lg">If you're not a member yet, join us to start collaborating.</p>
+                <JoinGroupButton code={params.code} />
+            </>
+            ):(
+            <p>You're already a member</p>)
+            }
+            
+        </div> 
     )
+    
 }
 
 async function fetchTasks(code) {
