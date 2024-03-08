@@ -1,6 +1,7 @@
+import { redirect } from "next/navigation"
 import { GroupDetailsModal, GroupList } from "../../components/group"
 import { TaskBoard } from "../../components/task"
-import { redirectTo, getSession, getTasks, getGroups, getGroup} from "../../lib/actions"
+import { getSession, getGroups, getGroup} from "../../lib/actions"
 
 export default async function SpecificGroupPage({ params }) {
     const session = await getSession()
@@ -8,11 +9,7 @@ export default async function SpecificGroupPage({ params }) {
     const group = await getGroup(params.code)
     
     if (session && !session?.ok){
-        redirectTo('/signin')
-    }
-
-    if (!session || !session?.ok) {
-        return null
+        redirect('/signin')
     }
 
     return (

@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from "react"
-import { getGroups, createGroup, joinGroup } from "../lib/actions"
+import { createGroup } from "../lib/actions"
 import { Modal, ToggleModalButton } from "../components/modal"
 import { Message } from "./message"
 import QRCode from 'qrcode'
@@ -136,15 +136,6 @@ function QRCodeComponent({ url }) {
     return <canvas ref={canvasRef} />;
 }
 
-function JoinGroupButton(code) {
-    
-    async function join() {
-        const response = await joinGroup(code)
-    }
-    return (
-        <button className="bg-purple-400 hover:bg-purple-600 text-white rounded p-4 shadow-md" onClick={ join }>Join Group</button>
-    )
-}
 
 
-export { GroupList, GroupCreation, GroupCreationModal, GroupDetailsModal, GroupDetails, JoinGroupButton}
+export { GroupList, GroupCreation, GroupCreationModal, GroupDetailsModal, GroupDetails}
