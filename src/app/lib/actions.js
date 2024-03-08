@@ -7,10 +7,13 @@ const REGISTER_API_URL = '/api/register-user'
 const SIGNIN_API_URL = '/api/signin-user'
 const SESSION_API_URL = '/api/session'
 const GROUP_CREATE_API_URL = '/api/create-group'
+const GET_GROUP_API_URL = '/api/get-group'
 const GET_GROUPS_API_URL = '/api/get-groups'
 const TASK_CREATE_API_URL = '/api/create-task'
+const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
-
+const EDIT_TASK_API_URL = '/api/edit-task'
+const JOIN_GROUP_API_URL = '/api/join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
 
@@ -149,6 +152,53 @@ async function getGroups() {
     return { ok: false, msg: "Unexpected error has occurred", data: null};
 }
 
+async function getGroup(code) {
+    try {
+        const params = `?code=${code}`
+        const response = await fetch(BASE_URL + GET_GROUP_API_URL + params, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            return { ok: true, msg: response.statusText, data: await response.json()}
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+
+async function joinGroup(data) {
+    let response
+    
+    try {
+        response = await fetch(BASE_URL + JOIN_GROUP_API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth() },
+            body: JSON.stringify(data)
+            })
+        
+        if (response.status === 201) {
+            return { ok: true, msg: response.statusText, data: await response.json()};
+        } else if ([400, 401, 404, 409, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null};
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    return { ok: false, msg: response.statusText || "Unexpected error has occurred", data: null};
+}
+
 async function createTask(channel, formData) {
     try{
         const data = {
@@ -156,7 +206,8 @@ async function createTask(channel, formData) {
             title: formData.get('title'),
             description: formData.get('description'),
             dueDate: formData.get('due_date')}
-
+            
+        console.log(data)
         const response = await fetch(BASE_URL + TASK_CREATE_API_URL, {
             method: 'POST',
             headers: { 
@@ -177,9 +228,9 @@ async function createTask(channel, formData) {
     return { ok: false, msg: "Unexpected error has occurred", data: null }
 }
 
-async function getTasks(code) {
+async function getTasks(code, status) {
     try{
-        const params = `?code=${code}`
+        const params = `?code=${code}${status != null ? `&status=${status}` : ''}`;
         const response = await fetch(BASE_URL + GET_TASKS_API_URL + params, {
             method: 'GET',
             headers: { 
@@ -189,9 +240,9 @@ async function getTasks(code) {
         })
         
         if (response.status === 200) {
-            return { ok: true, msg: response.statusText, data: await response.json()}
-        } else if ([400, 401, 404, 500].includes(response.status)) {
-            return { ok: false, msg: response.statusText, data: null}
+            return { ok: true, status: response.status, msg: response.statusText, data: await response.json()}
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, status: response.status, msg: response.statusText, data: null}
         }
     } catch (error) {
         console.log(error)
@@ -200,51 +251,51 @@ async function getTasks(code) {
     return { ok: false, msg: "Unexpected error has occurred", data: null }
 }
 
-// Archived
-// Redirect unauthorized users to `sign-in` and return the session.
-async function protectFromUnauthorized() {    
-    const URL_SIGNIN = '/signin'
-
+async function getTask(code, id) {
     try {
-        const response = await fetch(BASE_URL + SESSION_API_URL, {
+        const params = `?code=${code}&id=${id}`
+        const response = await fetch(BASE_URL + GET_TASK_API_URL + params, {
             method: 'GET',
             headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
-            }
-        })
-
-        if (response.status === 200) {
-            return await response.json()
-        }
-        
-    } catch (error) {
-        console.log(error)
-    }
-    
-    redirect(BASE_URL+URL_SIGNIN)
-}
-
-// Archived
-// Direct authorized users to `url`.
-async function redirectAuthorizedTo(url) {
-    const URL_LOGOUT = '/logout'
-    try {
-        const response = await fetch(BASE_URL + SESSION_API_URL, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Authorization': getAuth()
             }
         })
         
         if (response.status === 200) {
-            redirect(BASE_URL+url)
+            return { ok: true, msg: response.statusText, data: await response.json()}
+        } else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
         }
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, createGroup, getGroups, createTask, getTasks}
+async function editTask(data, code, id) {
+    try{
+        const params = `?code=${code}&id=${id}`
+        const response = await fetch(BASE_URL + EDIT_TASK_API_URL + params, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            },
+            body: JSON.stringify(data)
+        })
+        var result = {}
+        if (response.status === 201) {
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
+export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, 
+    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}

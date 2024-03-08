@@ -2,6 +2,7 @@ import pool from "../middleware/database"
 import { getJwtTokenFromHeaders, getClaimFromJwtToken } from "../lib/actions"
 
 export async function GET(req) {
+    
     const token = getJwtTokenFromHeaders(req.headers, 'Bearer')
     const claim = await getClaimFromJwtToken(token)
     if (!token || !claim) {
@@ -10,42 +11,46 @@ export async function GET(req) {
     
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get('code')
-    const status = searchParams.get('status')
+    const taskId = searchParams.get('id')
 
-    if (!code) {
+    if (!taskId) {
         return new Response(null, { status: 400, statusText: "The channel code is invalid." });
     }
     
     const userId = claim.id 
 
     const selectChannel = `
-        SELECT id FROM Channels 
+        SELECT * FROM Channels 
         WHERE Channels.join_url = $1`
-        
+
     const selectChannelWithUser = `
-        SELECT id FROM Channels 
+        SELECT Channels.* FROM Channels 
         INNER JOIN UsersChannels ON Channels.id = UsersChannels.channel_id 
         WHERE Channels.join_url = $1 AND UsersChannels.user_id = $2`
 
-    var getTasksQuery = `
-        SELECT Tasks.* FROM Tasks
+    const getTaskQuery = `
+        SELECT Tasks.*, Users.username, Users.email, Users.first_name, Users.last_name FROM Tasks
         INNER JOIN Channels On Tasks.channel_id = Channels.id
-        WHERE Channels.join_url = $1`
-    const tasksQueryParams = [code]
-
-    if (status !== null) {
-        getTasksQuery += ` AND Tasks.status = $2`
-        tasksQueryParams.push(status)
-    }
+        INNER JOIN Users On Tasks.created_by = Users.id
+        WHERE Tasks.id = $1`
 
     
     try {
+        const channelFound = await pool.query(selectChannel, [code])
+        if (channelFound.rowCount === 0) {
+            return new Response(null, {status: 404, statusText: "The channel is not found"})
+        }
         
+        const channelFoundWithUser = await pool.query(selectChannelWithUser, [code, userId])
+        if (channelFoundWithUser.rowCount === 0) {
+            return new Response(null, {status: 403, statusText: "The channel is found, but you are not a member"})
+        }
 
-        const { rowCount, rows } = await pool.query(getTasksQuery, tasksQueryParams)
+        const { rowCount, rows } = await pool.query(getTaskQuery, [taskId])
+        console.log(rows)
         if (rowCount > 0) {
-            return new Response(JSON.stringify(rows),
-            {status: 200, statusText: `${rowCount} tasks have been found.`})
+            return new Response(JSON.stringify(rows[0]),
+            {status: 200, statusText: `A task has been found.`})
         }
         
         return new Response(null, {status: 404, statusText: "No task has been found."})

@@ -8,7 +8,6 @@ export async function POST(req) {
         return new Response(null, { status: 401, statusText: "The token is invalid." });
     }
     
-    console.log("Test")
     const userId = claim.id 
     const { title, description, dueDate, code } = await req.json()
 
@@ -24,10 +23,10 @@ export async function POST(req) {
             const channelId = rows[0].id
 
             const insertTaskQuery = `
-            INSERT INTO Tasks (channel_id, created_by, title, description, due_date, assigned_to)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO Tasks (channel_id, created_by, title, description)
+            VALUES ($1, $2, $3, $4)
             RETURNING *`
-            const task = await pool.query(insertTaskQuery, [channelId, userId, title, description, dueDate, userId])
+            const task = await pool.query(insertTaskQuery, [channelId, userId, title, description])
             await pool.query('COMMIT')
             
             return new Response(JSON.stringify(task.rows[0]), { status: 201, statusText: "The task has been created."})  
