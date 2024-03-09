@@ -1,5 +1,4 @@
 import pool from "../middleware/database";
-import bcrypt from "bcryptjs";
 import {getClaimFromJwtToken, getJwtTokenFromHeaders} from "../lib/actions";
 import {mkdir, writeFile} from "fs/promises"
 import path from "path"

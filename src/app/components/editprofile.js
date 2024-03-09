@@ -119,72 +119,76 @@ function EditProfile() {
     );
 }
 
-// function EditEmailPassword() {
-//     const [isError, setError] = useState(true)
-//     const [message, setMessage] = useState('')
-//     async function saveChanges(formData) {
-//         const response = await updateUserAuthenticators(formData)
-//         setError(!response.ok)
-//         setMessage(response.msg)
-//     }
-//
-//     return (
-//         <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
-//             <Message isError={isError} text={message}/>
-//             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action={saveChanges}>
-//                 {/*<h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Sign In</h2>*/}
-//                 <div className="mb-4">
-//                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-//                         Old Email
-//                     </label>
-//                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                         id="email"
-//                         type="email"
-//                         name="email"
-//                         required
-//                     />
-//                 </div>
-//                 <div className="mb-6">
-//                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-//                         Old Password
-//                     </label>
-//                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-//                         id="password"
-//                         type="password"
-//                         name="password"
-//                         required
-//                     />
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-//                         New Email
-//                     </label>
-//                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                            id="new_email"
-//                            type="email"
-//                            name="new_email"
-//                            required
-//                     />
-//                 </div>
-//                 <div className="mb-6">
-//                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-//                         New Password
-//                     </label>
-//                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-//                            id="new_password"
-//                            type="password"
-//                            name="new_password"
-//                            required
-//                     />
-//                 </div>
-//                 <div className="flex items-center justify-between">
-//                     <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-//                         Submit
-//                     </button>
-//                 </div>
-//             </form>
-//         </div>
-//     );
-// }
+function EditEmailPassword() {
+    const [isError, setError] = useState(true)
+    const [message, setMessage] = useState('')
 
-export {EditProfile/*, EditEmailPassword*/}
+    const router = useRouter()
+    async function saveChanges(formData) {
+        const response = await updateUserAuthenticators(formData)
+        setError(!response.ok)
+        setMessage(response.msg)
+    }
+
+    return (
+        <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+            <Message isError={isError} text={message}/>
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action={saveChanges}>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Old Email
+                    </label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email"
+                        type="email"
+                        name="email"
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        Old Password
+                    </label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        name="password"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        New Email
+                    </label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="new_email"
+                           type="email"
+                           name="new_email"
+                           required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        New Password
+                    </label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                           id="new_password"
+                           type="password"
+                           name="new_password"
+                           required
+                    />
+                </div>
+                <div className="flex flex-row items-center gap-1">
+                    <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Submit
+                    </button>
+                    <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={() => router.push('/editprofile')}>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+export {EditProfile, EditEmailPassword}

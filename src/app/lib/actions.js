@@ -15,7 +15,7 @@ const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const GET_USERPROFILE_API_URL = '/api/get-userprofile'
 const UPDATE_USERPROFILE_API_URL = '/api/update-userprofile'
-//const UPDATE_USERAUTH_API_URL = '/api/update-userauthenticators'
+const UPDATE_USERAUTH_API_URL = '/api/update-userauthenticators'
 const GET_INVITE_URL_API = '/api/get-joinurl'
 const TASK_UPDATE_API_URL = '/api/edit-task'
 
@@ -231,39 +231,39 @@ async function updateUserProfile(formData) {
     return result
 }
 
-// async function updateUserAuthenticators(formData) {
-//     const data = {
-//         email: formData.get('email'),
-//         password: formData.get('password'),
-//         new_email: formData.get('new_email'),
-//         new_password: formData.get('new_password')
-//     }
-//
-//     try{
-//         const response = await fetch(BASE_URL + UPDATE_USERAUTH_API_URL, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
-//             },
-//             body: JSON.stringify(data)
-//         })
-//
-//         var result = {}
-//         if (response.status === 201) {
-//             //cookies().set('jwt', await response.json())
-//             result = { ok: true, msg: response.statusText };
-//         } else if ([401, 404, 500].includes(response.status)) {
-//             result = { ok: false, msg: response.statusText};
-//         } else {
-//             result = { ok: false, msg: "Unexpected error has occurred" };
-//         }
-//     } catch(error){
-//         console.log(error)
-//     }
-//
-//     return result
-// }
+async function updateUserAuthenticators(formData) {
+    const data = {
+        email: formData.get('email'),
+        password: formData.get('password'),
+        new_email: formData.get('new_email'),
+        new_password: formData.get('new_password')
+    }
+
+    try{
+        const response = await fetch(BASE_URL + UPDATE_USERAUTH_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+            },
+            body: JSON.stringify(data)
+        })
+
+        var result = {}
+        if (response.status === 201) {
+            //cookies().set('jwt', await response.json())
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+
+    return result
+}
 
 async function createTask(channel, formData) {
     try{
@@ -385,4 +385,4 @@ async function inviteUser(code) {
         return { ok: false, msg: "Error occurred while fetching invite URL" };
     }
 }
-export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, updateUserProfile,/* updateUserAuthenticators,*/ createTask, getTasks, inviteUser, editTask}
+export { handleSignIn, handleSignUp, handleLogout, protectFromUnauthorized, redirectAuthorizedTo, createGroup, getGroups, getUserProfile, updateUserProfile, updateUserAuthenticators, createTask, getTasks, inviteUser, editTask}
