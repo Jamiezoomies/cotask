@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import { redirectTo } from "../lib/actions"
 
-function InviteMember({ isSignedIn, isMember, channel }) {
+function InviteMember({ isSignedIn, group, code }) {
     useEffect(()=> {    
         if (!isSignedIn) {
             redirectTo('/signin')
@@ -13,15 +13,19 @@ function InviteMember({ isSignedIn, isMember, channel }) {
         <>
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
             <h1 className="text-4xl font-bold">Welcome to Our Channel!</h1>
-            { !isMember ? (
-            <>
-                <p className="mt-2 text-lg">If you're not a member yet, join us to start collaborating.</p>
-                <JoinGroupButton code={channel} />
-            </>
+            <h2>{group?.name}</h2>
+            <p>{group?.description}</p>
+            { group?.ok ? (
+                <>
+                <p>You're already a member of this channel</p>
+                <a href={`/group/${code}`}>return to the channel</a>
+                </>
             ):(
-                <p>You're already a member</p>)
-            }
-            
+                <>
+                    <p className="mt-2 text-lg">If you're not a member yet, join us to start collaborating.</p>
+                    <JoinGroupButton code={code} />
+                </>
+            )}
             </div> 
         </>
     )

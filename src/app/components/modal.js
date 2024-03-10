@@ -20,7 +20,7 @@ function Modal ({ isOpen, onClose, title, children} ) {
 function ToggleModalButton ({ label, onClick }) {
     return (
         <button
-            className="px-4 py-2 bg-white rounded hover:bg-grey-200 transition-colors text-black font-bold"
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-400 transition-colors text-black font-bold"
             onClick={onClick}
         >
             {label}

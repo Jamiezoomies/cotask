@@ -16,10 +16,16 @@ export default async function SpecificGroupPage({ params }) {
         <>
             <div className="min-h-screen flex">
                 <GroupList groups={groups?.data}/>
-                <div className="flex flex-col p-4">
-                    <p>{ params.code }</p>
-                    <GroupDetailsModal pageUrl={process.env.BASE_URL} group={group?.data} />
-                    <TaskBoard channel={params.code}/>
+                <div className="flex flex-col w-full p-4">
+                    <div className="flex flex-col p-4 bg-white rounded-lg shadow-md border border-black">
+                        <h3 className="text-xl font-semibold text-gray-800">{group?.data.name}</h3>
+                        <p className="text-gray-600 mt-2">{group?.data.description}</p>
+                        <p className="text-sm text-gray-500 mt-4">Code: <span className="font-medium text-gray-700">{params.code}</span></p>
+                        <GroupDetailsModal pageUrl={process.env.BASE_URL} group={group?.data} />
+                    </div>
+                    <div className="flex flex-col">
+                        <TaskBoard channel={params.code}/>
+                    </div>
                 </div>
             </div>
         </>

@@ -1,13 +1,13 @@
-import { getSession, getTasks } from "../../../lib/actions"
+import { getGroup, getSession } from "../../../lib/actions"
 import { InviteMember } from "../../../components/invite"
 
 export default async function Join({ params }) {
     const session = await getSession()
-    const tasks = await getTasks(params.code)
-    
+    const group = await getGroup(params.code)
+    console.log(group)
     return (
         <>
-            <InviteMember isSignedIn={session?.ok} isMember={tasks?.ok} channel={params.code}/>
+            <InviteMember isSignedIn={session?.ok} group={group} code={params.code}/>
         </>
     )
     

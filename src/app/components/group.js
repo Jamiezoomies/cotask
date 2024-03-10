@@ -6,26 +6,21 @@ import { Message } from "./message"
 import QRCode from 'qrcode'
 
 function GroupList({ groups }) {
-    const [response, setResponse] = useState()
-    
     return (
-        <div className="bg-gray-900 w-64 text-white p-4">
-            <div className="py-4">
-                <p className="text-sm">{response?.msg}</p>
-            </div>
+        <div className="bg-gray-900 w-48 text-white p-4">
+            <h2>Group Channels</h2>
             <GroupCreationModal/>
             <ul className="flex flex-col">
                 {groups?.map(group => (
                     <li 
                         key={group.id} 
-                        className="flex items-center py-2 hover:bg-gray-700 cursor-pointer"
+                        className="flex items-center bg-gray-800 py-2 hover:bg-gray-700 my-2 border-b border-gray-600 p-2 cursor-pointer"
                     >
-                        <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
-                        <a href={`/group/${group.join_url}`}>
-                            <div className="flex flex-col flex-grow">
-                                <span className="text-sm font-medium">{group.name}</span>
-                                <span className="text-xs text-gray-400">{group.description}</span>
-                                <span className="text-xs">{group.join_url}</span>
+                        <a className="w-full" href={`/group/${group.join_url}`}>
+                            <div className="flex flex-col flex-grow items-center gap-1">
+                                <span className="text-base font-medium">{group.name}</span>
+                                <span className="text-sm text-gray-400">{group.description}</span>
+                                <span className="text-xs border border-purple-400 text-purple-400 bg-purple-900 p-1 rounded-lg">{group.join_url}</span>
                             </div>
                         </a>
                     </li>
@@ -103,7 +98,7 @@ function GroupDetailsModal({ pageUrl, group }) {
 
     return (
         <>
-            <ToggleModalButton label="Group Channel Info" onClick={toggleModal} />
+            <ToggleModalButton label="Share" onClick={toggleModal} />
             <Modal isOpen={isModalOpen} onClose={toggleModal} title={group?.name}>
                 <GroupDetails pageUrl={pageUrl} group={group}/>
             </Modal>
