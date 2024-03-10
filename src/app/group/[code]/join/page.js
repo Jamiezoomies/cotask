@@ -33,17 +33,18 @@ export default function Join({ params }) {
     
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-            <h1 className="text-4xl font-bold">Welcome to Our Channel!</h1>
-            { !isMember ? (
-            <>
-                <p className="mt-2 text-lg">If you're not a member yet, join us to start collaborating.</p>
-                <JoinGroupButton code={params.code} />
-            </>
-            ):(
-            <p>You're already a member</p>)
-            }
-            
+        <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+            <div className="bg-white shadow-md rounded pt-12 pb-10 px-8 flex flex-col justify-center items-center">
+                <h1 className="text-4xl font-bold">Welcome to Our Channel!</h1>
+                { !isMember ? (
+                <>
+                    <p className="my-3 text-lg">If you're not a member yet, join us to start collaborating.</p>
+                    <JoinGroupButton code={params.code} />
+                </>
+                ):(
+                <p className="my-3 text-lg">You're already a member</p>)
+                }
+          </div>     
         </div> 
     )
     
