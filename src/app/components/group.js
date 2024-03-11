@@ -9,6 +9,7 @@ function GroupList({ channel }) {
     const [isLoading, setLoading] = useState(true)
     const [isOpenCreation, setOpenCreation] = useState(false)
     const [groups, setGroups] = useState()
+    const [update, setUpdate] = useState(0)
 
     useEffect(()=> {
         (async()=>{
@@ -22,21 +23,19 @@ function GroupList({ channel }) {
 
     useEffect(()=> {
         (async()=>{
-            if (!isOpenCreation) {
                 setLoading(true)
                 const response = await getGroups(channel)
                 setGroups(response?.data)
                 if (response) {
                     setLoading(false)
                 }
-            }
         })()
-    }, [isOpenCreation])
+    }, [update])
     
     return (
         <>
         <Modal isOpen={isOpenCreation} onClose={()=>setOpenCreation(false)} title="New Group">
-            <GroupCreation/>
+            <GroupCreation onUpdate={()=>setUpdate(update + 1)}/>
         </Modal>
         <div className="bg-gray-900 w-48 text-white p-2">
             <h2 className="p-2 text-center font-semibold">Group Channels</h2>
@@ -89,7 +88,7 @@ function GroupOverview({ group }) {
     )
 }
 
-function GroupCreation() {
+function GroupCreation({ onUpdate }) {
     const [createdGroup, setCreatedGroup] = useState(null)
     
     async function create (formData) {
@@ -100,6 +99,9 @@ function GroupCreation() {
 
         const response = await createGroup(data)
         setCreatedGroup(response)
+        if (response) {
+            onUpdate()
+        }
     }
 
     return (

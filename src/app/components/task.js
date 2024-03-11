@@ -145,6 +145,7 @@ function TaskEditor({ channel, id, onClose}) {
     const [task, setTask] = useState()
     const [response, setResponse] = useState()
     const [taskStatus, setTaskStatus] = useState()
+    const [isLoading, setLoading] = useState(true)
 
     useEffect(()=> {
         (async()=>{
@@ -152,9 +153,12 @@ function TaskEditor({ channel, id, onClose}) {
             if (response?.ok) {
                 setTask(response?.data)
                 setTaskStatus(response?.data.status)
+                if (response) {
+                    setLoading(false)
+                }
             }
-            
         })()
+
     }, [])
 
     async function edit (formData) {
@@ -175,88 +179,95 @@ function TaskEditor({ channel, id, onClose}) {
     return (
         <>
             <Message isError={!response?.ok} text={response?.msg}/>
-            <TaskDeleteButton channel={channel} id={task?.id} onClose={onClose}/>
-            <form action={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Edit a task</h2>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
-                        Task Title
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id='title'
-                        type="text"
-                        name="title"
-                        defaultValue={task?.title}
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Task Description</label>
-                    <textarea
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="description"
-                        name="description"
-                        defaultValue={task?.description}
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="due_date">Due Date</label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="due_date"
-                        type="date" 
-                        name="due_date"
-                        defaultValue={task?.due_date}
-                    />
-                </div>
-                <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Status
-                </label>
-                <div className="flex space-x-2 mb-3">
-                    <button
-                    type="button"
-                    className={`py-2 px-4 rounded ${taskStatus === 'todo' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setTaskStatus('todo')}
-                    >
-                    Todo
-                    </button>
-                    <button
-                    type="button"
-                    className={`py-2 px-4 rounded ${taskStatus === 'inprogress' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setTaskStatus('inprogress')}
-                    >
-                    In Progress
-                    </button>
-                    <button
-                    type="button"
-                    className={`py-2 px-4 rounded ${taskStatus === 'done' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setTaskStatus('done')}
-                    >
-                    Done
-                    </button>
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                { isLoading ? 
+                ( <Loading/> ) : ( 
+                <>
+                    <div className="flex justify-end">
+                        <TaskDeleteButton channel={channel} id={task?.id} onClose={onClose}/>
                     </div>
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="due_date">Created By</label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        id="created_by"
-                        type="text" 
-                        name="created_by"
-                        defaultValue={task?.username}
-                        readOnly
-                        disabled
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Edit task
-                    </button>
-                </div>
-            </form>
+                    <form action={edit}>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                                Task Title
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id='title'
+                                type="text"
+                                name="title"
+                                defaultValue={task?.title}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Task Description</label>
+                            <textarea
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="description"
+                                name="description"
+                                defaultValue={task?.description}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="due_date">Due Date</label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="due_date"
+                                type="date" 
+                                name="due_date"
+                                defaultValue={task?.due_date?.slice(0, 10)}
+                            />
+                        </div>
+                        <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Status
+                        </label>
+                        <div className="flex space-x-2 mb-3">
+                            <button
+                            type="button"
+                            className={`py-2 px-4 rounded ${taskStatus === 'todo' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                            onClick={() => setTaskStatus('todo')}
+                            >
+                            Todo
+                            </button>
+                            <button
+                            type="button"
+                            className={`py-2 px-4 rounded ${taskStatus === 'inprogress' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                            onClick={() => setTaskStatus('inprogress')}
+                            >
+                            In Progress
+                            </button>
+                            <button
+                            type="button"
+                            className={`py-2 px-4 rounded ${taskStatus === 'done' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                            onClick={() => setTaskStatus('done')}
+                            >
+                            Done
+                            </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="due_date">Created By</label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="created_by"
+                                type="text" 
+                                name="created_by"
+                                defaultValue={task?.username}
+                                readOnly
+                                disabled
+                            />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Edit task
+                            </button>
+                        </div>
+                    </form>
+                </> )}
+            </div>
         </>
     )
 }
@@ -269,7 +280,7 @@ function TaskDeleteButton({ channel, id, onClose}) {
         }
     } 
     return (
-        <button className="text-sm bg-purple-900 border border-purple-400 border-purple-400 text-purple-400 rounded-md px-2 py-1"onClick={handleDelete}>Delete</button>
+        <button className="text-sm bg-gray-800 shadow-lg hover:bg-gray-500 text-white rounded-lg px-2 py-1"onClick={handleDelete}>Delete Task</button>
     )
 }
 
