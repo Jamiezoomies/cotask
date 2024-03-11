@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { GroupDetailsModal, GroupList } from "../../components/group"
 import { TaskBoard } from "../../components/task"
 import { getSession, getGroups, getGroup} from "../../lib/actions"
+import Navbar from "../../components/navbar";
 
 export default async function SpecificGroupPage({ params }) {
     const session = await getSession()
@@ -14,6 +15,7 @@ export default async function SpecificGroupPage({ params }) {
 
     return (
         <>
+            <Navbar/>
             <div className="min-h-screen flex">
                 <GroupList groups={groups?.data}/>
                 <div className="flex flex-col w-full p-4">
