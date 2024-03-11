@@ -1,9 +1,13 @@
-import SignupForm from "../components/signup-form"
-import { redirectAuthorized } from "../utils/actions";
+import { redirect } from "next/navigation";
+import { SignupForm } from "../components/sign"
+import { getSession } from "../lib/actions";
 import Navbar from "../components/navbar";
 
 export default async function SignUp() {
-  const user = await redirectAuthorized('/home')
+  const session = await getSession()
+  if (!session || session?.ok) { 
+    redirect('/group')
+  }
 
   return (
     <>

@@ -1,4 +1,4 @@
-import pool from "../../utils/database";
+import pool from "/src/app/utils/database";
 
 
 // localhost:3000/api/dbtest

@@ -1,5 +1,6 @@
-import pool from "../../utils/database"
+import pool from "../middleware/database"
 import bcrypt from 'bcryptjs'
+import { createJwtToken } from '../lib/actions'
 
 export async function POST ( req ){
     const {email, password} = await req.json()
@@ -7,29 +8,27 @@ export async function POST ( req ){
     if (!isValidEmail(email) || !isValidPassword(password)) {
         return new Response(null, { status: 400 })
     }
-
-    const saltRounds = 10
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const values = [email, hashedPassword]
     
-    const lookup_query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
+    const lookupQuery = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
 
     try{
-        const { rowCount, rows } = await pool.query(lookup_query, [email])
+        const { rowCount, rows } = await pool.query(lookupQuery, [email])
         if (rowCount > 0) {
-            const user = rows[0]
-            const isPasswordMatched = await bcrypt.compare(password, user.password_hash)
+            const found = rows[0]
+            const isPasswordMatched = await bcrypt.compare(password, found.password_hash)
             
             if (isPasswordMatched) {
-                return new Response(JSON.stringify(rows[0]), { status: 200 })
+                return new Response(JSON.stringify(await createJwtToken(found)), 
+                { status: 200, statusText: "Welcome back! You've successfully signed in."})
+            } else {
+                return new Response(null, { status: 401, statusText: "Oops! It looks like the password is incorrect. Please try again."})
             }
         } 
         
-        return new Response("Invalid email or password", { status: 400})
-
+        return new Response(null, { status: 404, statusText: "Oops! It looks like the email is incorrect. Please try again."})
     } catch (error) {
         console.log(error)
-        return new Response('', { status: 500 })
+        return new Response(null, { status: 500, statusText: "The internal error has occurred."})
     }
 }
 

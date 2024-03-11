@@ -1,13 +1,13 @@
-import SigninForm from "../components/signin-form"
-import { redirectAuthorized } from "../utils/actions";
+import { SigninForm } from "../components/sign"
+import { getSession } from "../lib/actions"
 import Navbar from "../components/navbar";
 
-export default async function SignIn() {
-    const user = await redirectAuthorized('/home')
+export default async function SignInPage() {
+    const session = await getSession()
 
     return (
         <>
-            <SigninForm/>
+            <SigninForm session={session}/>
             <Navbar/>
         </>
     )

@@ -1,12 +1,16 @@
-import pool from "../../utils/database"
+import pool from "../middleware/database"
 import bcrypt from 'bcryptjs'
 
 
 export async function POST ( req ){
     const {email, password, username, firstname, lastname} = await req.json()
 
-    if (!isValidEmail(email) || !isValidPassword(password)) {
-        return new Response(null, { status: 400 })
+    if (!isValidEmail(email)) {
+        return new Response(null, { status: 400, statusText: "Oops! The email is not valid format." })
+    }
+
+    if (!isValidPassword(password)) {
+        return new Response(null, { status: 400, statusText: "Oops! The password must be at least 8 characters long." })
     }
 
     const saltRounds = 10
@@ -21,22 +25,21 @@ export async function POST ( req ){
 
 
     try{
-        const lookup_response = await pool.query(lookup_query, [email])
-        if (lookup_response.rowCount > 0) {
-            return new Response(null, { status: 409 })    
+        const lookupResponse = await pool.query(lookup_query, [email])
+        if (lookupResponse.rowCount > 0) {
+            return new Response(null, { status: 409, statusText: "The user already exists."})    
         }
         
         const { rowCount, rows } = await pool.query(insert_query, values);
         if (rowCount > 0) {
-            console.log(rows[0])
-            return new Response(JSON.stringify(rows[0]), { status: 201 })
-        } else {
-            return new Response(null, { status: 400 })
+            return new Response(JSON.stringify(rows[0]), { status: 201, statusText: "The user has been registered."})
         }
+        
+        return new Response(null, { status: 500, statusText: "The error has occurred while inserting and returning data." })
         
     } catch (error) {
         console.log(error)
-        return new Response('', { status: 500 })
+        return new Response(null, { status: 500, statusText: "An unexpected error has occurred."})
     }
 }
 
