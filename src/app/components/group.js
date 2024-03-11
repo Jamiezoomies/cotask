@@ -63,6 +63,32 @@ function GroupList({ channel }) {
     )
 }
 
+function GroupOverview({ group }) {
+    return (
+        <>
+        <h1 className="font-medium text-2xl py-4 px-1">Group Channel</h1>
+        <div className="flex bg-blue-100 flex-col p-4 bg-white rounded-lg shadow-md shadow-lg border border-gray-300">
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-900">Name</label>
+                    <p className="text-xl font-semibold text-gray-800">{group?.data?.name}</p>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-900">Description</label>
+                    <p className="text-gray-800 mt-1">{group?.data?.description}</p>
+                </div>
+                
+                <div>
+                    <label className="block text-sm font-medium text-gray-900">Join Code</label>
+                    <p className="text-sm text-gray-800 mt-1">Code: <span className="font-medium text-gray-700">{group?.data?.join_url}</span></p>
+                </div>
+                <GroupDetailsModal group={group?.data} />
+                </div>
+            </div>
+        </>
+    )
+}
+
 function GroupCreation() {
     const [createdGroup, setCreatedGroup] = useState(null)
     
@@ -181,4 +207,4 @@ function QRCodeComponent({ url }) {
 
 
 
-export { GroupList, GroupCreation, GroupDetailsModal, GroupDetails}
+export { GroupList, GroupOverview, GroupCreation, GroupDetailsModal, GroupDetails}

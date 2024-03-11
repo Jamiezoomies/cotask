@@ -15,6 +15,7 @@ const GET_TASKS_API_URL = '/api/get-tasks'
 const EDIT_TASK_API_URL = '/api/edit-task'
 const DELETE_TASK_API_URL = '/api/delete-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
+const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
 
@@ -170,6 +171,32 @@ async function getGroup(code) {
     }
 }
 
+async function getJoinGroup(code) {
+    try {
+        const params = `?code=${code}`
+        const response = await fetch(BASE_URL + GET_JOIN_GROUP_API_URL + params, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            // channel found, and user is not in the group.
+            return { ok: true, joinable: true, msg: response.statusText, data: await response.json()}
+        } else if (response.status === 409) {
+            // channel found, and user is already in the group.
+            return { ok: true, joinable: false, msg: response.statusText, data: await response.json()}
+        } 
+        else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 async function joinGroup(data) {
     let response
@@ -317,4 +344,5 @@ async function deleteTask(channel, id) {
 }
 
 export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
-    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask, deleteTask}
+    createGroup, getGroups, getGroup, joinGroup, getJoinGroup, createTask, getTasks, 
+    getTask, editTask, deleteTask}

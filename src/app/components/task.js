@@ -27,9 +27,7 @@ function TaskBoard({channel}) {
             settodoTasks(tasks1?.data)
             setinprogressTasks(tasks2?.data)
             setdoneTasks(tasks3?.data)
-            if (tasks1 && tasks2 && tasks3) {
-                setLoading(true)
-            }
+            setLoading(false)
 
         })()
     }, [isCreationOpen, isEditorOpen])
