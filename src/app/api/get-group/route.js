@@ -9,7 +9,6 @@ export async function GET(req) {
     }
 
     const userId = claim.id
-
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get('code')
     

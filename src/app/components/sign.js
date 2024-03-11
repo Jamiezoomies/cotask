@@ -1,19 +1,26 @@
 'use client'
 import { useEffect, useState } from "react"
 import { handleSignIn, handleLogout, handleSignUp, redirectTo } from "../lib/actions"
-import { Message } from "../components/message"
+import { Message, Loading } from "./utils"
 import { getSession } from "../lib/actions";
 import { useSearchParams } from "next/navigation";
 
 function SignupForm() {
     const [response, setResponse] = useState(null)
+    const [isLoading, setLoading] = useState(true)
 
     async function register(formData) {
         setResponse(await handleSignUp(formData))
         const session = await getSession()
         if (session?.ok) {
             redirectTo('/group')
+        } else {
+            setLoading(false)
         }
+    }
+    
+    if (isLoading) { 
+        return (<Loading/>) 
     }
 
     return (
@@ -105,9 +112,11 @@ function SignupForm() {
             </div>
         </div>
     )
+    
 }
 
 function SigninForm({ session }) {
+    const [isLoading, setLoading] = useState(true)
     const [response, setResponse] = useState(null)
     const destination_url = useSearchParams().get('destination_url')
 
@@ -119,12 +128,18 @@ function SigninForm({ session }) {
                 } else {
                     redirectTo('/group')
                 }
+            } else {
+                setLoading(false)
             }
         })()
     }, [session])
 
     async function signin(formData) {
         setResponse(await handleSignIn(formData))        
+    }
+
+    if (isLoading) { 
+        return (<Loading/>) 
     }
     
     return (

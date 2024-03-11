@@ -104,13 +104,8 @@ async function redirectTo(url){
     redirect(BASE_URL + url)
 }
 
-async function createGroup(formData) {
+async function createGroup(data) {
     try{
-        const data = {
-            name: formData.get('name'),
-            description: formData.get('description'),
-        }
-
         const response = await fetch(BASE_URL + GROUP_CREATE_API_URL, {
             method: 'POST',
             headers: { 
@@ -321,5 +316,5 @@ async function deleteTask(channel, id) {
     return result
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, 
+export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
     createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask, deleteTask}

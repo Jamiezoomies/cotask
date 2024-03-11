@@ -1,11 +1,12 @@
 'use client'
 import { useState, useEffect } from "react"
 import { createTask, getTask, editTask, getTasks, deleteTask} from "../lib/actions"
-import { Message } from "../components/message"
+import { Loading, Message } from "./utils"
 import { Modal } from "../components/modal"
 
 
 function TaskBoard({channel}) {
+    const [isLoading, setLoading] = useState(true)
     const [isEditorOpen, setEditorOpen] = useState(false)
     const [isCreationOpen, setCreationOpen] = useState(false)
     const [selectedTaskId, setSelectedTaskId] = useState()
@@ -26,6 +27,9 @@ function TaskBoard({channel}) {
             settodoTasks(tasks1?.data)
             setinprogressTasks(tasks2?.data)
             setdoneTasks(tasks3?.data)
+            if (tasks1 && tasks2 && tasks3) {
+                setLoading(true)
+            }
 
         })()
     }, [isCreationOpen, isEditorOpen])
@@ -34,6 +38,8 @@ function TaskBoard({channel}) {
         setSelectedTaskId(taskId)
         setEditorOpen(true)
     }
+
+    if (isLoading) { return (<Loading/>)}
 
     return (
         <>
