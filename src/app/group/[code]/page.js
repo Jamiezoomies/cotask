@@ -1,28 +1,52 @@
-import { GroupDetailsModal, GroupList } from "../../components/group"
+'use client'
+import { redirect } from "next/navigation"
+import { GroupOverview, GroupList } from "../../components/group"
 import { TaskBoard } from "../../components/task"
-import { redirectTo, getSession, getTasks, getGroups, getGroup} from "../../lib/actions"
+import { getSession, getGroup} from "../../lib/actions"
+import { useEffect, useState } from "react"
+import { Loading } from "../../components/utils"
 
-export default async function SpecificGroupPage({ params }) {
-    const session = await getSession()
-    const groups = await getGroups(params.code)
-    const group = await getGroup(params.code)
+export default function SpecificGroupPage({ params }) {
+    const [session, setSession] = useState()
+    const [group, setGroup] = useState()
+    const [isLoading, setLoading] = useState(true)
+
+    useEffect(()=> {
+        (async()=>{
+            setSession(await getSession())
+            setGroup(await getGroup(params.code))
+            
+        })()
+
+        
+    }, [])
     
-    if (session && !session?.ok){
-        redirectTo('/signin')
-    }
+    useEffect(()=>{
+        if (group?.ok) {
+            setLoading(false)
+        }
+        
+        if (session && !session?.ok){
+            redirect(`/signin?destination_url=${params.code}`)
+        }
+        console.log(group)
+        if (session && session?.ok && group && !group?.ok) {
+            redirect(`/group/${params.code}/join`)
+        }
 
-    if (!session || !session?.ok) {
-        return null
-    }
+    }, [session, group])
+    
+    if (isLoading) { return <Loading/> }
 
     return (
         <>
             <div className="min-h-screen flex">
-                <GroupList groups={groups?.data}/>
-                <div className="flex flex-col p-4">
-                    <p>{ params.code }</p>
-                    <GroupDetailsModal group={group?.data} />
-                    <TaskBoard channel={params.code}/>
+                <GroupList channel={params.code}/>
+                <div className="flex flex-col w-full p-4">
+                    <GroupOverview group={group}/>
+                    <div className="flex flex-col">
+                        <TaskBoard channel={params.code}/>
+                    </div>
                 </div>
             </div>
         </>

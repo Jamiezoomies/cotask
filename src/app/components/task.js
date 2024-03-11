@@ -1,11 +1,12 @@
 'use client'
 import { useState, useEffect } from "react"
-import { createTask, getTask, editTask, getTasks } from "../lib/actions"
-import { Message } from "../components/message"
+import { createTask, getTask, editTask, getTasks, deleteTask} from "../lib/actions"
+import { Loading, Message } from "./utils"
 import { Modal } from "../components/modal"
 
 
 function TaskBoard({channel}) {
+    const [isLoading, setLoading] = useState(true)
     const [isEditorOpen, setEditorOpen] = useState(false)
     const [isCreationOpen, setCreationOpen] = useState(false)
     const [selectedTaskId, setSelectedTaskId] = useState()
@@ -26,6 +27,7 @@ function TaskBoard({channel}) {
             settodoTasks(tasks1?.data)
             setinprogressTasks(tasks2?.data)
             setdoneTasks(tasks3?.data)
+            setLoading(false)
 
         })()
     }, [isCreationOpen, isEditorOpen])
@@ -35,6 +37,8 @@ function TaskBoard({channel}) {
         setEditorOpen(true)
     }
 
+    if (isLoading) { return (<Loading/>)}
+
     return (
         <>
             <Modal isOpen={isEditorOpen} onClose={()=>setEditorOpen(false)} title="Edit Task">
@@ -43,28 +47,29 @@ function TaskBoard({channel}) {
             <Modal isOpen={isCreationOpen} onClose={()=>setCreationOpen(false)} title="New Task">
                 <TaskCreation channel={channel}/>
             </Modal>
-            <button onClick={()=>setCreationOpen(true)}>Create</button>
-            <div className="flex flex-row">
-                <TaskList tasks={todoTasks} onSelect={selectTask}/>
-                <TaskList tasks={inprogressTasks} onSelect={selectTask}/>
-                <TaskList tasks={doneTasks} onSelect={selectTask}/>
+            <h1 className="font-medium text-2xl py-4 px-1">Board</h1>
+            <div className="flex flex-row w-full flex-grow gap-4">
+                <TaskList title="TODO" tasks={todoTasks} onSelect={selectTask}/>
+                <TaskList title="IN PROGRESS" tasks={inprogressTasks} onSelect={selectTask}/>
+                <TaskList title="DONE" tasks={doneTasks} onSelect={selectTask}/>
+            </div>
+            <div className="flex justify-center py-4">
+                <button className="w-full hover:bg-gray-400 border-gray-200 rounded-lg py-1 px-2 text-lg bg-gray-200 shadow-md text-gray-700" onClick={()=>setCreationOpen(true)}>+</button>
             </div>
         </>
     )
 }
 
-function TaskList({ tasks, onSelect }) {
+function TaskList({ title, tasks, onSelect }) {
 
-    return (
-        <div className="bg-gray-900 text-white">
-            <div className="py-4">
-                <p className="text-sm">{tasks?.msg}</p>
-            </div>
-            <ul className="flex flex-col">
+    return (    
+        <div className="bg-gray-200 flex-1 border border-gray-200 border-2 rounded-lg py-4 px-1 text-gray-700">
+            <h3 className="text-md text-gray-700 font-semibold mb-4 px-4">{title} ({tasks?.length || 0})</h3>
+            <ul className="flex flex-col gap-2">
                 {tasks?.map(task => (
                     <li 
                         key={task.id} 
-                        className="flex items-center py-2 hover:bg-gray-700 cursor-pointer"
+                        className="flex items-center shadow-sm p-4 bg-white hover:bg-gray-100 cursor-pointer border border-gray-200 rounded-lg"
                         onClick={()=>onSelect(task.id)}
                     >
                         <span className={`h-2 w-2 rounded-full mr-2 
@@ -72,11 +77,10 @@ function TaskList({ tasks, onSelect }) {
                         : task.status === 'inprogress' ? "bg-green-500" 
                         : task.status === 'done' ? "bg-red-500" : ""}`}></span>
                         <div className="flex flex-col flex-grow">
-                            <span className="text-sm font-medium">{task.title}</span>
-                            <span className="text-xs text-gray-400">{task.due_date}</span>
-                            <span className="text-xs text-gray-400">{task.created_at}</span>
-                            <span className="text-xs text-gray-400">{task.status}</span>
-                            <span className="text-xs text-gray-400">{task.priority}</span>
+                            <span className="text-sm text-gray-400">{task?.due_date? task?.due_date?.slice(0,10): "No Due"}</span>
+                            <span className="text-xs text-gray-400">Created at {task.created_at?.slice(0,10)}</span>
+                            <span className="text-base font-medium">{task.title}</span>
+                            <span className="text-xs font-medium">{task.description}</span>
                         </div>
                     </li>
                 ))}
@@ -160,7 +164,6 @@ function TaskEditor({ channel, id, onClose}) {
             dueDate: formData.get('due_date') || null,
             status: taskStatus,
         }
-        console.log(data)
 
         const edited = await editTask(data, channel, id)
         setResponse(edited);
@@ -172,6 +175,7 @@ function TaskEditor({ channel, id, onClose}) {
     return (
         <>
             <Message isError={!response?.ok} text={response?.msg}/>
+            <TaskDeleteButton channel={channel} id={task?.id} onClose={onClose}/>
             <form action={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Edit a task</h2>
                 <div className="mb-4">
@@ -257,4 +261,16 @@ function TaskEditor({ channel, id, onClose}) {
     )
 }
 
-export { TaskList, TaskCreation, TaskBoard}
+function TaskDeleteButton({ channel, id, onClose}) {
+    async function handleDelete() {
+        const response = await deleteTask(channel, id)
+        if (response.ok) {
+            onClose()
+        }
+    } 
+    return (
+        <button className="text-sm bg-purple-900 border border-purple-400 border-purple-400 text-purple-400 rounded-md px-2 py-1"onClick={handleDelete}>Delete</button>
+    )
+}
+
+export { TaskList, TaskCreation, TaskBoard, TaskDeleteButton}

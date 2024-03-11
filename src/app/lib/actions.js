@@ -13,7 +13,9 @@ const TASK_CREATE_API_URL = '/api/create-task'
 const GET_TASK_API_URL = '/api/get-task'
 const GET_TASKS_API_URL = '/api/get-tasks'
 const EDIT_TASK_API_URL = '/api/edit-task'
+const DELETE_TASK_API_URL = '/api/delete-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
+const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
 
@@ -103,13 +105,8 @@ async function redirectTo(url){
     redirect(BASE_URL + url)
 }
 
-async function createGroup(formData) {
+async function createGroup(data) {
     try{
-        const data = {
-            name: formData.get('name'),
-            description: formData.get('description'),
-        }
-
         const response = await fetch(BASE_URL + GROUP_CREATE_API_URL, {
             method: 'POST',
             headers: { 
@@ -174,6 +171,32 @@ async function getGroup(code) {
     }
 }
 
+async function getJoinGroup(code) {
+    try {
+        const params = `?code=${code}`
+        const response = await fetch(BASE_URL + GET_JOIN_GROUP_API_URL + params, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            // channel found, and user is not in the group.
+            return { ok: true, joinable: true, msg: response.statusText, data: await response.json()}
+        } else if (response.status === 409) {
+            // channel found, and user is already in the group.
+            return { ok: true, joinable: false, msg: response.statusText, data: await response.json()}
+        } 
+        else if ([400, 401, 403, 404, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 async function joinGroup(data) {
     let response
@@ -297,5 +320,29 @@ async function editTask(data, code, id) {
     return result
 }
 
-export { handleSignIn, handleSignUp, handleLogout, getSession, redirectTo, 
-    createGroup, getGroups, getGroup, joinGroup, createTask, getTasks, getTask, editTask}
+async function deleteTask(channel, id) {
+    try{
+        const params = `?channel=${channel}&id=${id}`
+        const response = await fetch(BASE_URL + DELETE_TASK_API_URL + params, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': getAuth()
+            }
+        })
+        var result = {}
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
+export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
+    createGroup, getGroups, getGroup, joinGroup, getJoinGroup, createTask, getTasks, 
+    getTask, editTask, deleteTask}

@@ -1,18 +1,26 @@
 'use client'
 import { useEffect, useState } from "react"
 import { handleSignIn, handleLogout, handleSignUp, redirectTo } from "../lib/actions"
-import { Message } from "../components/message"
+import { Message, Loading } from "./utils"
 import { getSession } from "../lib/actions";
+import { useSearchParams } from "next/navigation";
 
 function SignupForm() {
     const [response, setResponse] = useState(null)
+    const [isLoading, setLoading] = useState(true)
 
     async function register(formData) {
         setResponse(await handleSignUp(formData))
         const session = await getSession()
         if (session?.ok) {
             redirectTo('/group')
+        } else {
+            setLoading(false)
         }
+    }
+    
+    if (isLoading) { 
+        return (<Loading/>) 
     }
 
     return (
@@ -104,17 +112,34 @@ function SignupForm() {
             </div>
         </div>
     )
+    
 }
 
-function SigninForm() {
+function SigninForm({ session }) {
+    const [isLoading, setLoading] = useState(true)
     const [response, setResponse] = useState(null)
+    const destination_url = useSearchParams().get('destination_url')
+
+    useEffect(()=>{
+        (async()=>{
+            if (!session || session?.ok) { 
+                if (destination_url){
+                    redirectTo('/group/'+destination_url+'/join')
+                } else {
+                    redirectTo('/group')
+                }
+            } else {
+                setLoading(false)
+            }
+        })()
+    }, [session])
 
     async function signin(formData) {
-        setResponse(await handleSignIn(formData))
+        setResponse(await handleSignIn(formData))        
+    }
 
-        if (response?.ok) {
-            redirectTo('/group')
-        }
+    if (isLoading) { 
+        return (<Loading/>) 
     }
     
     return (
@@ -150,6 +175,9 @@ function SigninForm() {
                     <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Sign In
                     </button>
+                </div>
+                <div className="py-2">
+                    <p className="text-sm text-blue">Not registered? <a className="text-indigo-900 bg-indigo-200" href="/signup">Sign up</a></p>
                 </div>
             </form>
         </div>
