@@ -30,17 +30,33 @@ function EditProfile() {
     function previewProfilePicture(fileSubmit) {
         const img = document.querySelector("img");
         const file = document.getElementById("profile_img").files[0];
-        const reader = new FileReader();
+        if (!file) {return;}
 
+        if (file.size > 700000) {
+            document.getElementById("profile_img").value = "";
+            img.src = profileData.image;
+            setError(true);
+            setMessage("Image is too large. Image must be under 700KB.");
+            return;
+        }
+
+        img.onload = () => {
+            if (img.naturalWidth !== 420 || img.naturalHeight !== 420) {
+                document.getElementById("profile_img").value = "";
+                img.src = profileData.image;
+                setError(true);
+                setMessage("Invalid image dimensions. Image must be 420x420.");
+            }
+        }
+
+        const reader = new FileReader();
         reader.addEventListener(
           "load", () => {
                 img.src = reader.result;
             },
             false
         );
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+        reader.readAsDataURL(file);
     }
 
     async function saveChanges(formData) {
@@ -82,9 +98,7 @@ function EditProfile() {
                     <input className="absolute hidden"
                        id="profile_img"
                        type="file"
-                       accept="image/*"
-                       height="420"
-                       width="420"
+                       accept="image/png"
                        name="profile_img"
                        onChange={() => previewProfilePicture(this)}
                        defaultValue={""}
