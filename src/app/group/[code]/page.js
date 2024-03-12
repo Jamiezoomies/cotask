@@ -40,7 +40,7 @@ export default function SpecificGroupPage({ params }) {
 
     return (
         <>
-            <div className="min-h-screen flex">
+            <div className="min-h-max flex pt-16">
                 <GroupList channel={params.code}/>
                 <div className="flex flex-col w-full p-4">
                     <GroupOverview group={group}/>
@@ -48,6 +48,7 @@ export default function SpecificGroupPage({ params }) {
                         <TaskBoard channel={params.code}/>
                     </div>
                 </div>
+
             </div>
         </>
     )

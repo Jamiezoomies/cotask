@@ -14,7 +14,7 @@ export default async function GroupPage() {
 
     return (
         <>
-            <div className="min-h-screen flex">
+            <div className="min-h-screen flex pt-16">
                 <GroupList groups={groups?.data}/>
                 <div className=" w-full flex flex-col p-4 items-center justify-center text-semibold space-y-4 text-lg">
                     <p>This is an amazing task management app, <span className="font-bold">CoTask!</span></p>
