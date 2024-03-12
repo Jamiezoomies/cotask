@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {getUserProfile, updateUserProfile, updateUserAuthenticators} from "../lib/actions"
-import {Message} from "./message";
+import { Loading, Message } from '../components/utils'
 
 function EditProfile() {
     const [profileData, setProfileData] = useState({username: '', email: '', image: '', bio: ''});
@@ -68,7 +68,7 @@ function EditProfile() {
     }
 
     if(isLoading){
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return (<Loading/>)
     }
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-gray-100">

@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { getUserProfile } from "../lib/actions"
+import { Loading } from './utils';
 
 function UserProfile() {
     const [profileData, setProfileData] = useState({username: '', email: '', image: '', bio: ''});
@@ -20,24 +21,36 @@ function UserProfile() {
         fetchData();
     }, []);
     if(isLoading){
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return (<Loading/>)
     }
+    
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <div className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4">
+        <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+            <div className="bg-white min-w-80 shadow-md rounded px-4 pt-10 pb-6 mb-4 space-y-6">
                 <div className="w-1/2 mx-auto overflow-hidden rounded-full">
                     <img className="h-full w-full object-cover" src={profileData.image}/>
                 </div>
-            <h2 className="text-xl text-center font-bold text-gray-700 pt-3">
-                {profileData.username}
-            </h2>
-            <p className="block text-center text-gray-400 text-md font-bold pb-3">
-                {profileData.email}
-            </p>
-            <hr></hr>
-            <p className="block text-gray-500 text-md font-bold break-words p-3">
-                {profileData.bio}
-            </p>
+                <div>
+                    <label className="block text-sm font-medium text-gray-600">Username</label>
+                    <h2 className="text-xl text-center font-bold text-gray-700 pt-3">
+                        {profileData.username}
+                    </h2>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-600">Email</label>
+                    <p className="block text-center text-gray-400 text-md font-bold pb-3">
+                        {profileData.email}
+                    </p>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-600">My Biography</label>
+                    <p className="block text-gray-500 text-md font-bold break-words p-3">
+                        {profileData.bio}
+                    </p>
+                </div>
+            </div>
+            <div className="block text-gray-800 bg-indigo-200 text-sm break-words p-1 hover:text-gray-500">
+                <a href="/editprofile">Edit profile and Change Email & Password</a>
             </div>
         </div>
     );

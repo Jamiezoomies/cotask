@@ -8,7 +8,7 @@ async function Navbar() {
     var navBarItems = [ "Sign Up", "/signup", "Sign In", "/signin" ]
     const session = await getSession()
     if (session && session?.ok) {
-        navBarItems = [ "Groups", "/group", "Profile", "/profile"]
+        navBarItems = [ "Groups", "/group", "Profile", "/userprofile"]
     }
 
     return (

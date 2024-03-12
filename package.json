@@ -15,10 +15,7 @@
     "jsonwebtoken": "^9.0.2",
     "next": "14.1.0",
     "pg": "^8.11.3",
-<<<<<<< HEAD
     "qrcode": "^1.5.3",
-=======
->>>>>>> edit-profile
     "react": "^18",
     "react-dom": "^18"
   },
