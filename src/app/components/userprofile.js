@@ -26,7 +26,7 @@ function UserProfile() {
     
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
-            <div className="bg-white min-w-80 shadow-md rounded px-4 pt-10 pb-6 mb-4 space-y-6">
+            <div className="bg-white max-w-80 shadow-md rounded px-4 pt-10 pb-6 mb-4 space-y-6">
                 <div className="w-1/2 mx-auto overflow-hidden rounded-full">
                     <img className="h-full w-full object-cover" src={profileData.image}/>
                 </div>

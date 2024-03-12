@@ -23,9 +23,9 @@ export async function POST ( req ){
     const lookup_query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
 
     // SQL query to insert the user with data
-    const insert_query = `
-    INSERT INTO Users (email, password_hash, username, first_name, last_name)
-    VALUES ($1, $2, $3, $4, $5)
+    const insert_user_query = `
+    INSERT INTO Users (email, password_hash, username, first_name, last_name, profile_picture_url, bio)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *`
 
 
