@@ -52,6 +52,7 @@ function InviteMember({ isSignedIn, group, code }) {
     )
 }
 
+// Join button for users to join the group channel
 function JoinGroupButton({code}) {
   async function join() {
       const data = {code: code}

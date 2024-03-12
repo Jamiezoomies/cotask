@@ -12,6 +12,7 @@ function GroupList({ channel }) {
     const [groups, setGroups] = useState()
     const [update, setUpdate] = useState(0)
 
+    // Fetch groups list on mount
     useEffect(()=> {
         (async()=>{
             const response = await getGroups(channel)
@@ -22,6 +23,7 @@ function GroupList({ channel }) {
         })()
     }, [])
 
+    // After group creation, it updates the list
     useEffect(()=> {
         (async()=>{
                 setLoading(true)
@@ -64,6 +66,7 @@ function GroupList({ channel }) {
     )
 }
 
+// Group channel overview displays its information
 function GroupOverview({ group }) {
     return (
         <>
@@ -93,6 +96,7 @@ function GroupOverview({ group }) {
 function GroupCreation({ onUpdate }) {
     const [createdGroup, setCreatedGroup] = useState(null)
     
+    // Submit triggers create function to post request the group data.
     async function create (formData) {
         const data = {
             name: formData.get('name'),
@@ -102,6 +106,7 @@ function GroupCreation({ onUpdate }) {
         const response = await createGroup(data)
         setCreatedGroup(response)
         if (response) {
+            // Update the state to retrieve the group list data.
             onUpdate()
         }
     }
@@ -162,6 +167,7 @@ function GroupDetailsModal({ group }) {
     )
 }
 
+// Group details and QR code to share.
 function GroupDetails({ group }) {
     const url = `${window.location.origin}/group/${group?.join_url}/join`
     return (
@@ -198,13 +204,14 @@ function GroupDetails({ group }) {
 function QRCodeComponent({ url }) {
     const canvasRef = useRef(null);
 
+    // Regenerate the QR code if the URL changes
     useEffect(() => {
         if (canvasRef.current) {
         QRCode.toCanvas(canvasRef.current, url, (error) => {
             if (error) console.error('Error generating QR code: ', error);
         });
         }
-    }, [url]); // Regenerate the QR code if the URL changes
+    }, [url]); 
 
     return <canvas ref={canvasRef} />;
 }

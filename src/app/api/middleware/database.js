@@ -1,5 +1,16 @@
 import { Pool } from 'pg';
 
+/*
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
+})
+*/
+
+// Connect to the Postgre SQL database server running on AWS.
 const pool = new Pool({
     user: 'postgres',
     host: 'database-cotask.cmtmi3jexvz5.us-west-1.rds.amazonaws.com',
@@ -7,18 +18,5 @@ const pool = new Pool({
     password: 'PostgresCotask!',
     port: '5432',
 });
-
-const db = async (text, params) => {
-    /*
-    const client = await pool.connect();
-    try {
-        const result = await client;
-        console.log('Connected to the database.');
-        return result;
-    } finally {
-        client.release();
-    }
-    */
-};
 
 export default pool;

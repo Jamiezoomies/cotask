@@ -5,16 +5,19 @@ import { createJwtToken } from '../lib/actions'
 export async function POST ( req ){
     const {email, password} = await req.json()
 
+    // Verify email and password
     if (!isValidEmail(email) || !isValidPassword(password)) {
         return new Response(null, { status: 400 })
     }
     
+    // SQL query to look up the user's email
     const lookupQuery = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
 
     try{
         const { rowCount, rows } = await pool.query(lookupQuery, [email])
         if (rowCount > 0) {
             const found = rows[0]
+            // Check if the hashed password is matching
             const isPasswordMatched = await bcrypt.compare(password, found.password_hash)
             
             if (isPasswordMatched) {

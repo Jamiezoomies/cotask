@@ -4,6 +4,7 @@ import { GroupList } from "../components/group"
 import { getSession, getGroups } from "../lib/actions"
 
 export default async function GroupPage() {
+    // retrieve session and group on mount from server side.
     const session = await getSession()
     const groups = await getGroups()
 

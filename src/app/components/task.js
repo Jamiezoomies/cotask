@@ -5,6 +5,7 @@ import { Loading, Message } from "./utils"
 import { Modal } from "../components/modal"
 
 
+// TaskBoard contains 3 task lists based on the task's status.
 function TaskBoard({channel}) {
     const [isLoading, setLoading] = useState(true)
     const [isEditorOpen, setEditorOpen] = useState(false)
@@ -14,7 +15,7 @@ function TaskBoard({channel}) {
     const [inprogressTasks, setinprogressTasks] = useState([])
     const [doneTasks, setdoneTasks] = useState([])
     
-
+    // fetch tasks based on the status
     useEffect(() =>{
         (async()=>{
             if (isCreationOpen || isEditorOpen ) {
@@ -60,8 +61,8 @@ function TaskBoard({channel}) {
     )
 }
 
+// Display task list
 function TaskList({ title, tasks, onSelect }) {
-
     return (    
         <div className="bg-gray-200 flex-1 border border-gray-200 border-2 rounded-lg py-4 px-1 text-gray-700">
             <h3 className="text-md text-gray-700 font-semibold mb-4 px-4">{title} ({tasks?.length || 0})</h3>
@@ -89,9 +90,11 @@ function TaskList({ title, tasks, onSelect }) {
     )
 }
 
+
 function TaskCreation({ channel }) {
     const [response, setResponse] = useState(null)
 
+    // Fetch request to create a new task
     async function create (formData) {
         setResponse(await createTask(channel, formData))
     }
@@ -147,6 +150,7 @@ function TaskEditor({ channel, id, onClose}) {
     const [taskStatus, setTaskStatus] = useState()
     const [isLoading, setLoading] = useState(true)
 
+    // Get the current task data on mount
     useEffect(()=> {
         (async()=>{
             const response = await getTask(channel, id)
@@ -158,9 +162,10 @@ function TaskEditor({ channel, id, onClose}) {
                 }
             }
         })()
-
     }, [])
 
+
+    // Request to edit the task data
     async function edit (formData) {
         const data = {
             title: formData.get('title'),
@@ -172,6 +177,7 @@ function TaskEditor({ channel, id, onClose}) {
         const edited = await editTask(data, channel, id)
         setResponse(edited);
         if (edited?.ok) {
+            // After editing, close the modal
             onClose()
         }
     }
@@ -272,10 +278,12 @@ function TaskEditor({ channel, id, onClose}) {
     )
 }
 
+// Button to delete the task
 function TaskDeleteButton({ channel, id, onClose}) {
     async function handleDelete() {
         const response = await deleteTask(channel, id)
         if (response.ok) {
+            // After deletion, close the modal
             onClose()
         }
     } 

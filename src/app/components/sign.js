@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 
 function SignupForm() {
     const [response, setResponse] = useState(null)
-    const [isLoading, setLoading] = useState(true)
 
+    // Submit button requests to insert the new user data.
     async function register(formData) {
         setResponse(await handleSignUp(formData))
         const session = await getSession()
@@ -112,8 +112,10 @@ function SignupForm() {
 function SigninForm({ session }) {
     const [isLoading, setLoading] = useState(true)
     const [response, setResponse] = useState(null)
+    // if the redirection occurs from join page 
     const destination_url = useSearchParams().get('destination_url')
 
+    // if the user logs in, redirect the user to the target urls. 
     useEffect(()=>{
         (async()=>{
             if (!session || session?.ok) { 
@@ -128,6 +130,7 @@ function SigninForm({ session }) {
         })()
     }, [session])
 
+    // Request sign-in
     async function signin(formData) {
         setResponse(await handleSignIn(formData))        
     }
@@ -178,6 +181,7 @@ function SigninForm({ session }) {
     )
 }
 
+// Logout and redirect the user
 function LogoutButton() {
     return (
         <button 

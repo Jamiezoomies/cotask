@@ -2,6 +2,7 @@ import pool from "../middleware/database"
 import { getJwtTokenFromHeaders, getClaimFromJwtToken } from "../lib/actions"
 
 export async function GET(req) {
+    // JWT Authentication
     const token = getJwtTokenFromHeaders(req.headers, 'Bearer')
     const claim = await getClaimFromJwtToken(token)
     if (!token || !claim) {
@@ -12,11 +13,13 @@ export async function GET(req) {
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get('code')
     
+    // SQL query to check if the user is a member
     const checkUserIsInGroupQuery = `
     SELECT Channels.* FROM Channels 
     INNER JOIN UsersChannels ON Channels.id = UsersChannels.channel_id 
     WHERE UsersChannels.user_id = $1 AND Channels.join_url = $2`
 
+    // SQL query to get the group so that the user can join.
     const getGroupQuery = `
     SELECT Channels.* FROM Channels 
     INNER JOIN UsersChannels ON Channels.id = UsersChannels.channel_id 

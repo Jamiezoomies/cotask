@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 const BASE_URL = process.env.BASE_URL
+const TOKEN_TYPE = process.env.AUTHENTICATE_SCHEME_TYPE
+const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME
+
 const REGISTER_API_URL = '/api/register-user'
 const SIGNIN_API_URL = '/api/signin-user'
 const SESSION_API_URL = '/api/session'
@@ -19,9 +22,6 @@ const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
 const GET_COMMENTS_API_URL = '/api/get-comments'
 const CREATE_COMMENT_API_URL = '/api/create-comment'
 
-
-const TOKEN_TYPE = 'Bearer'
-const SESSION_COOKIE_NAME = 'jwt'
 
 function getAuth() {
     const auth = `${TOKEN_TYPE} ${cookies().get(SESSION_COOKIE_NAME)?.value}`

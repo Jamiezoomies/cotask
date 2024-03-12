@@ -15,6 +15,7 @@ export default function SpecificGroupPage({ params }) {
     const [commentUpdated, setCommentUpdated] = useState(0)
     const [query, setQuery] = useState('')
 
+    // get session and group data on mount
     useEffect(()=> {
         (async()=>{
             setSession(await getSession())
@@ -22,12 +23,14 @@ export default function SpecificGroupPage({ params }) {
         })()
     }, [])
 
+    // when comment and search field are changed, retrieve the comments again.
     useEffect(()=>{
         (async()=>{
             setComments(await getComments(params.code, query))
         })()
     }, [commentUpdated, query])
     
+    // redirection based on the session and group fetch results
     useEffect(()=>{
         if (group?.ok) {
             setLoading(false)
@@ -36,7 +39,7 @@ export default function SpecificGroupPage({ params }) {
         if (session && !session?.ok){
             redirect(`/signin?destination_url=${params.code}`)
         }
-        console.log(group)
+
         if (session && session?.ok && group && !group?.ok) {
             redirect(`/group/${params.code}/join`)
         }

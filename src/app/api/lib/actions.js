@@ -1,8 +1,8 @@
 'use server'
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET_KEY = 'TEST'
-const JWT_COOKIE_EXPIRY = '6h'
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const JWT_COOKIE_EXPIRY = process.env.JWT_COOKIE_EXPIRY
 
 async function createJwtToken(data) {
     const payload = {

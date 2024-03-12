@@ -2,7 +2,7 @@ import pool from "../middleware/database"
 import { getJwtTokenFromHeaders, getClaimFromJwtToken } from "../lib/actions"
 
 export async function PUT(req) {
-    
+    // JWT Authentication
     const token = getJwtTokenFromHeaders(req.headers, 'Bearer')
     const claim = await getClaimFromJwtToken(token)
     if (!token || !claim) {
@@ -19,6 +19,7 @@ export async function PUT(req) {
         return new Response(null, { status: 400, statusText: "The channel code is invalid." });
     }
     
+    // SQL query to update a task 
     const updateTaskQuery = `
     UPDATE Tasks
     SET title = $1, description = $2, due_date = $3, status = $4

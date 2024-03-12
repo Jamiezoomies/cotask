@@ -2,6 +2,7 @@
 import { createComment, getComments } from "../lib/actions"
 import { useState } from "react"
 
+// Group channel comments list
 function CommentsList({ comments, onSearch }) {
     return (
         <>
@@ -29,8 +30,10 @@ function CommentsList({ comments, onSearch }) {
     )
 }
 
+// Users can create the comment
 function SendComment({channel, onUpdate}) {
 
+    // fetch request to send the comment data
     async function send (formData) {
         const data = {
             code: channel,
@@ -59,9 +62,12 @@ function SendComment({channel, onUpdate}) {
         
 }
 
+// Search/Filter the comment text.
 function SearchComment({ onSearch }) {
     const [inputValue, setInputValue] = useState('');
 
+    // Whenever the field changes, trigger handleSearch. 
+    // It updates the state in the parent and allow to retrieve the comment list again.
     async function handleSearch(event) {
         const query = event.target.value;
         setInputValue(query);

@@ -2,6 +2,7 @@ import pool from "../middleware/database"
 import { getJwtTokenFromHeaders, getClaimFromJwtToken } from "../lib/actions"
 
 export async function GET(req) {
+    // JWT authentication
     const token = getJwtTokenFromHeaders(req.headers, 'Bearer')
     const claim = await getClaimFromJwtToken(token)
     if (!token || !claim) {
@@ -10,6 +11,7 @@ export async function GET(req) {
 
     const userId = claim.id 
     
+    // SQL query to get group list
     const getGroupsQuery = `
     SELECT Channels.* FROM Channels 
     INNER JOIN UsersChannels ON Channels.id = UsersChannels.channel_id 

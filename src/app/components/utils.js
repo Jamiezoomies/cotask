@@ -1,3 +1,4 @@
+// Simple message component for response status
 function Message ({isError, text}) {
     if (!text) return null
     return (
@@ -7,6 +8,7 @@ function Message ({isError, text}) {
     )
 }
 
+// Simple loading component
 function Loading() {
     return (
         <div className="flex justify-center items-center w-full min-h-80 opacity-70">

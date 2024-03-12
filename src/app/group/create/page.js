@@ -2,18 +2,20 @@
 import { useState, useEffect } from "react"
 import { createGroup, getSession, redirectTo } from "../../lib/actions"
 import { Message } from "../../components/message"
+
 export default function GroupCreationPage() {
     const [session, setSession] = useState(null)
     const [response, setResponse] = useState(null)
+
+    // get session on mount
     useEffect(() => {
         (async () => {
             const response = await getSession()
-            console.log(response)
             setSession(response)
         })()
     }, [])
     
-    
+    // request to create a new group on submit
     async function create (formData) {
         setResponse(await createGroup(formData))
         if (response.ok) {

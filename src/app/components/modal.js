@@ -1,3 +1,4 @@
+// Popup modal
 function Modal ({ isOpen, onClose, title, children} ) {
 
     if (!isOpen) return null;
@@ -17,6 +18,7 @@ function Modal ({ isOpen, onClose, title, children} ) {
     )
 }
 
+// Toggle button to open and close the modal
 function ToggleModalButton ({ label, onClick }) {
     return (
         <button

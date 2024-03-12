@@ -1,3 +1,4 @@
+// Contributors page
 export default function Team() {
 
   return (
