@@ -41,7 +41,7 @@ function EditProfile() {
         }
 
         img.onload = () => {
-            if (img.naturalWidth !== 420 || img.naturalHeight !== 420) {
+            if (img.naturalWidth > 420 || img.naturalHeight > 420) {
                 document.getElementById("profile_img").value = "";
                 img.src = profileData.image;
                 setError(true);
@@ -90,7 +90,7 @@ function EditProfile() {
         <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
             <Message isError={isError} text={message}/>
             <form className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4" action={saveChanges}>
-                <div className="relative w-1/2 mx-auto overflow-hidden rounded-full bg-black">
+                <div className="relative w-32 h-32 mb-4 mx-auto overflow-hidden rounded-full bg-gray-300">
                     <label htmlFor="profile_img">
                         <img className="peer h-full w-full object-cover hover:opacity-50" src={profileData.image}/>
                         <p className="absolute pointer-events-none invisible peer-hover:visible block w-full top-1/2 object-cover text-center text-gray-400 text-md px-3">Upload Photo</p>
@@ -104,14 +104,14 @@ function EditProfile() {
                        defaultValue={""}
                     />
                 </div>
-                <input className="shadow appearance-none border rounded w-full text-xl text-center font-bold text-gray-700 pt-3 focus:outline-none focus:shadow-outline"
+                <input className="shadow appearance-none border rounded w-full text-xl text-center font-bold text-gray-700 py-2 focus:outline-none focus:shadow-outline"
                     id="username"
                     type="text"
                     name="username"
                     defaultValue={profileData.username}
                     required
                 />
-                <p className="block text-center text-gray-400 text-md font-bold pb-3">
+                <p className="block text-center text-gray-400 text-md font-bold py-3">
                     {profileData.email}
                 </p>
                 <hr></hr>
