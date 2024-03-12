@@ -18,7 +18,7 @@ function CommentsList({ comments, onSearch }) {
                 >
                 <div className="flex flex-col flex-grow">
                     <div className="flex justify-between items-center">
-                    <span className="font-medium text-gray-900">{comment.username}</span>
+                    <span className="text-xs font-semibold text-gray-900">{comment.username}</span>
                     <span className="text-xs text-gray-500">{comment.created_at.slice(0, 10)}</span>
                     </div>
                     <p className="mt-1 text-sm text-gray-600">{comment.text}</p>
@@ -32,32 +32,44 @@ function CommentsList({ comments, onSearch }) {
 
 // Users can create the comment
 function SendComment({channel, onUpdate}) {
+    const [inputValue, setInputValue] = useState('');
+  
+    function clearInput () {
+      setInputValue('')
+    }
+
+    function handleChange (event) {
+        setInputValue(event.target.value);
+    }
 
     // fetch request to send the comment data
-    async function send (formData) {
+    async function handleClick (e) {
         const data = {
             code: channel,
-            text: formData.get('text')
+            text: inputValue
         }
 
         const response = await createComment(data)
         if (response?.ok) {
+            clearInput()
             onUpdate()
         }
     }
 
     return (
-        <form action={send} className="flex gap-1 py-1 mb-5">
+        <div className="flex gap-1 py-1 mb-5">
           <input
             type="text"
             name="text"
+            value={inputValue}
+            onChange={handleChange}
             placeholder="Enter your comment..."
             className="flex-grow p-2 border rounded shadow focus:outline-none rounded-lg"
           />
-          <button type="submit" className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-600">
+          <button onClick={()=>{handleClick()}} className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-600">
             Post
           </button>
-        </form>
+        </div>
     )
         
 }

@@ -233,7 +233,6 @@ async function createTask(channel, formData) {
             description: formData.get('description'),
             dueDate: formData.get('due_date')}
             
-        console.log(data)
         const response = await fetch(BASE_URL + TASK_CREATE_API_URL, {
             method: 'POST',
             headers: { 

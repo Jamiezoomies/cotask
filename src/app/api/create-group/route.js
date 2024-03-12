@@ -27,9 +27,9 @@ export async function POST(req) {
     RETURNING *`
 
     try{
-        const createdGroup = await pool.query(insertGroupQuery, [name, description, getRandomUrl()])
+        const {rowCount, rows} = await pool.query(insertGroupQuery, [name, description, getRandomUrl()])
         // After creating the new group, insert the user into the group.
-        if (createdGroup.rowCount > 0) {
+        if (rowCount > 0) {
             const channelId = rows[0].id
             
             await pool.query(insertUserGroupQuery, [userId, channelId])

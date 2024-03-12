@@ -21,17 +21,17 @@ export async function POST(req) {
 
     // SQL query to insert a new task into the tasks table
     const insertTaskQuery = `
-    INSERT INTO Tasks (channel_id, created_by, title, description)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO Tasks (channel_id, created_by, title, description, due_date)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING *`
     
     try {
-        const checkMember= await pool.query(checkMemberQuery, [code, userId])
+        const {rowCount, rows}= await pool.query(checkMemberQuery, [code, userId])
         // if user is a member of the channel, allow to insert the task
-        if (checkMember.rowCount > 0) {
+        if (rowCount > 0) {
             const channelId = rows[0].id
 
-            const task = await pool.query(insertTaskQuery, [channelId, userId, title, description])
+            const task = await pool.query(insertTaskQuery, [channelId, userId, title, description, dueDate])
             await pool.query('COMMIT')
             if (task.rowCount > 0) {
                 return new Response(JSON.stringify(task.rows[0]), { status: 201, statusText: "The task has been created."})  

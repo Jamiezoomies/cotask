@@ -26,8 +26,8 @@ export async function POST(req) {
     RETURNING *`
 
     try {
-        const checkMember = await pool.query(checkMemberQuery, [code, userId])
-        if (checkMember.rowCount > 0) {
+        const {rowCount, rows} = await pool.query(checkMemberQuery, [code, userId])
+        if (rowCount > 0) {
             // If the user is a member of the channel
             const channelId = rows[0].id
 
