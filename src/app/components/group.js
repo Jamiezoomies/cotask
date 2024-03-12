@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react"
 import { createGroup, getBaseUrl, getGroups } from "../lib/actions"
 import { Modal, ToggleModalButton } from "../components/modal"
 import { Loading, Message } from "./utils"
+import { LogoutButton } from "../components/sign"
 import QRCode from 'qrcode'
 
 function GroupList({ channel }) {
@@ -38,14 +39,15 @@ function GroupList({ channel }) {
             <GroupCreation onUpdate={()=>setUpdate(update + 1)}/>
         </Modal>
         <div className="bg-gray-900 w-48 text-white p-2">
+            <LogoutButton/>
+            <button className="text font-bold text-black bg-gray-200 py-4 w-full my-2 rounded hover:bg-gray-300 shadow" onClick={()=>setOpenCreation(true)}>New Group</button>
             <h2 className="p-2 text-center font-semibold">Group Channels</h2>
-            <button className="text-sm bg-gray-500 py-2 w-full rounded-lg hover:bg-gray-400 shadow-md" onClick={()=>setOpenCreation(true)}>Create a Group</button>
             <ul className="flex flex-col">
             { isLoading && <Loading/>}
                 {groups?.map(group => (
                     <li 
                         key={group.id} 
-                        className="flex items-center bg-gray-800 py-2 hover:bg-gray-700 rounded-lg my-1 shadow-lg border-b border-gray-600 p-2 cursor-pointer"
+                        className="flex items-center bg-gray-800 py-2 hover:bg-gray-700 rounded my-1 shadow-lg border-b border-gray-600 p-2 cursor-pointer"
                     >
                         <a className="w-full" href={`/group/${group.join_url}`}>
                             <div className="flex flex-col flex-grow items-center gap-1">

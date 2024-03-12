@@ -6,7 +6,6 @@ import { getSession, getGroups } from "../lib/actions"
 export default async function GroupPage() {
     const session = await getSession()
     const groups = await getGroups()
-    console.log(session)
 
     if (!session || !session?.ok) {
         redirect('/signin')
@@ -16,7 +15,7 @@ export default async function GroupPage() {
         <>
             <div className="min-h-screen flex">
                 <GroupList groups={groups?.data}/>
-                <div className=" w-full flex flex-col p-4 items-center justify-center text-semibold space-y-4 text-lg">
+                <div className=" w-full flex flex-col mt-10 py-8 items-center text-semibold space-y-4 text-lg">
                     <p>This is an amazing task management app, <span className="font-bold">CoTask!</span></p>
                     <p>Welcome, <span className="font-bold">{session?.session.username}.</span></p>
                     <div>

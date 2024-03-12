@@ -77,8 +77,7 @@ async function handleSignUp(formData) {
 }
 
 async function handleLogout() {
-    cookies().set(JWT_COOKIE_NAME, '', { maxAge: 0 })
-    redirect(URL_LOGOUT)
+    cookies().set(SESSION_COOKIE_NAME, '', { maxAge: 0 })
 }
 
 async function getSession() {
