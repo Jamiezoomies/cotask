@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation"
 import {EditEmailPassword} from "../components/editprofile"
 import { getSession } from "../lib/actions"
 
