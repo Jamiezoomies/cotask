@@ -90,4 +90,36 @@ function JoinGroupButton({code}) {
   )
 }
 
-export { InviteMember }
+function LinkToJoin() {
+  const [groupCode, setGroupCode] = useState('')
+
+  function join () {
+    // Assuming the groupCode is a part of the URL you want to navigate to
+    const url = `/group/${groupCode}/join`;
+    // Redirect to the URL
+    window.location.href = url;
+  }
+
+  return(
+    <>
+      <div className="flex flex-row items-center max-w-80">
+        <input
+            type="text"
+            value={groupCode}
+            onChange={(e) => setGroupCode(e.target.value)}
+            className="text-black rounded p-2 shadow-md flex-1"
+            placeholder="Enter group code"
+        />
+        <button
+            className="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition-colors duration-150"
+            onClick={join}
+        >
+            Join
+        </button>
+      </div>
+    </>
+    
+  )
+}
+
+export { InviteMember, LinkToJoin }

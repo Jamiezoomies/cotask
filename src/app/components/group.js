@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react"
 import { createGroup, getBaseUrl, getGroups } from "../lib/actions"
 import { Modal, ToggleModalButton } from "../components/modal"
 import { Loading, Message } from "./utils"
-import { LogoutButton } from "../components/sign"
 import QRCode from 'qrcode'
 
 function GroupList({ channel }) {

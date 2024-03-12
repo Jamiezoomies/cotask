@@ -184,7 +184,7 @@ Before you begin, you need to make sure your PostgreSQL server is up and running
 
 # Contributors
 Tae Hwan Kim (taehwankim@g.ucla.edu), Justin Morgan (justinmorgan@g.ucla.edu), 
-Michael Jordan (michaelbjordan@g.ucla.edu), Jon Paino (jonpaino@g.ucla.edu), 
+Michael Ward (michaelward1916@gmail.com), Jon Paino (jonpaino@g.ucla.edu), 
 Fernando Torres Vargas (ftorresvargas@g.ucla.edu)
 
 

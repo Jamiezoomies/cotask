@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { getSession } from "../lib/actions"
 import { LogoutButton } from "./sign";
+import { LinkToJoin } from "./invite";
 
 async function Navbar() {
 
@@ -28,7 +29,9 @@ async function Navbar() {
                 </Link>
             ))}
 
-            <div className="flex-1 grow-1"> </div>
+            <div className="flex-1 grow-1 flex justify-center">
+                <LinkToJoin/>
+            </div>
 
             {/*Right Side*/}
             {[
