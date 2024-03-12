@@ -1,7 +1,11 @@
 import pool from "../middleware/database"
 import bcrypt from 'bcryptjs'
 
+<<<<<<< HEAD
 export async function POST ( req ){
+=======
+export async function POST(req) {
+>>>>>>> edit-profile
     const {email, password, username, firstname, lastname} = await req.json()
 
     if (!isValidEmail(email)) {
@@ -15,10 +19,13 @@ export async function POST ( req ){
     // Hash Password
     const saltRounds = 10
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const values = [email, hashedPassword, username, firstname, lastname]
+    const defaultImage = 'https://tr.rbxcdn.com/70108dc7da4e002c8e5d2c1dcf0825fb/420/420/Hat/Png'
+    const defaultBio = 'This is a default bio.'
+    const userValues = [email, hashedPassword, username, firstname, lastname, defaultImage, defaultBio]
     
     // SQL query to look up the email
     const lookup_query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
+<<<<<<< HEAD
 
     // SQL query to insert the user with data
     const insert_query = `
@@ -26,23 +33,33 @@ export async function POST ( req ){
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *`
 
+=======
+    const insert_user_query = `
+    INSERT INTO Users (email, password_hash, username, first_name, last_name, profile_picture_url, bio)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING id, username, email, first_name, last_name, profile_picture_url, bio`
+>>>>>>> edit-profile
 
-    try{
+    try {
         const lookupResponse = await pool.query(lookup_query, [email])
         if (lookupResponse.rowCount > 0) {
             return new Response(null, { status: 409, statusText: "The user already exists."})    
         }
         
-        const { rowCount, rows } = await pool.query(insert_query, values);
-        if (rowCount > 0) {
-            return new Response(JSON.stringify(rows[0]), { status: 201, statusText: "The user has been registered."})
+        const insertUserResponse = await pool.query(insert_user_query, userValues)
+        if (insertUserResponse.rowCount > 0) {
+            const user = insertUserResponse.rows[0];
+            return new Response(JSON.stringify(user), { status: 201, statusText: "The user has been registered successfully."})
+        } else {
+            return new Response(null, { status: 500, statusText: "An error occurred while creating the user." })
         }
-        
-        return new Response(null, { status: 500, statusText: "The error has occurred while inserting and returning data." })
-        
     } catch (error) {
         console.log(error)
+<<<<<<< HEAD
         return new Response(null, { status: 500, statusText: "An unexpected error has occurred."})
+=======
+        return new Response(null, { status: 500, statusText: "An internal error has occurred."})
+>>>>>>> edit-profile
     }
 }
 

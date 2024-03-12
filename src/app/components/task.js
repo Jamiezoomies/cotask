@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from "react"
+<<<<<<< HEAD
 import { createTask, getTask, editTask, getTasks, deleteTask} from "../lib/actions"
 import { Loading, Message } from "./utils"
 import { Modal } from "../components/modal"
@@ -30,6 +31,17 @@ function TaskBoard({channel}) {
             setdoneTasks(tasks3?.data)
             setLoading(false)
 
+=======
+import { getTasks, createTask, editTask } from "../lib/actions"
+import { Message } from "../components/message"
+
+function TaskList({ channel, onEditTask }) {
+    const [response, setResponse] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            setResponse(await getTasks(channel))
+>>>>>>> edit-profile
         })()
     }, [isCreationOpen, isEditorOpen])
 
@@ -83,6 +95,12 @@ function TaskList({ title, tasks, onSelect }) {
                             <span className="text-base font-medium">{task.title}</span>
                             <span className="text-xs font-medium">{task.description}</span>
                         </div>
+                        <button 
+                            onClick={() => onEditTask(task)}
+                            className="ml-auto py-1 px-3 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out"
+                        >
+                            Edit
+                        </button>
                     </li>
                 ))}
             </ul>
@@ -144,6 +162,7 @@ function TaskCreation({ channel }) {
     )
 }
 
+<<<<<<< HEAD
 function TaskEditor({ channel, id, onClose}) {
     const [task, setTask] = useState()
     const [response, setResponse] = useState()
@@ -179,10 +198,19 @@ function TaskEditor({ channel, id, onClose}) {
         if (edited?.ok) {
             // After editing, close the modal
             onClose()
+=======
+function EditTask({ channel, task, onCancel }) {
+
+    async function edit(formData) {
+        const response = await editTask(channel, task, formData)
+        if (response.ok) {
+            onCancel(); 
+>>>>>>> edit-profile
         }
     }
 
     return (
+<<<<<<< HEAD
         <>
             <Message isError={!response?.ok} text={response?.msg}/>
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -293,3 +321,57 @@ function TaskDeleteButton({ channel, id, onClose}) {
 }
 
 export { TaskList, TaskCreation, TaskBoard, TaskDeleteButton}
+=======
+        <div>
+            <Message isError={!response?.ok} text={response?.msg}/>
+            <form action={edit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">Edit task</h2>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                        Task Title
+                    </label>
+                    <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        name="title"
+                        defaultValue={response.title}
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                        Task Description
+                    </label>
+                    <textarea
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                        name="description"
+                        defaultValue={response.description}
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dueDate">
+                        Due Date
+                    </label>
+                    <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                        type="date" 
+                        name="dueDate"
+                        defaultValue={response.dueDate}
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <button type="button" onClick={onCancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Cancel
+                    </button>
+                    <button type="submit" className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+export { TaskList, CreateTask, EditTask }
+>>>>>>> edit-profile

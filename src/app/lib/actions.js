@@ -21,7 +21,9 @@ const JOIN_GROUP_API_URL = '/api/join-group'
 const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
 const GET_COMMENTS_API_URL = '/api/get-comments'
 const CREATE_COMMENT_API_URL = '/api/create-comment'
-
+const GET_USERPROFILE_API_URL = '/api/get-userprofile'
+const UPDATE_USERPROFILE_API_URL = '/api/update-userprofile'
+const UPDATE_USERAUTH_API_URL = '/api/update-userauthenticators'
 
 function getAuth() {
     const auth = `${TOKEN_TYPE} ${cookies().get(SESSION_COOKIE_NAME)?.value}`
@@ -390,6 +392,99 @@ async function getComments(code, query) {
     return { ok: false, msg: "Unexpected error has occurred", data: null }
 }
 
+async function getUserProfile() {
+    try {
+        const token = cookies().get('jwt')?.value; 
+        const response = await fetch(BASE_URL + GET_USERPROFILE_API_URL, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${token}`
+            }
+        });
+
+        var result = {};
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText, data: await response.json()};
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText, data: null};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred", data: null };
+        }
+    } catch (error) {
+        console.log(error);
+        result = { ok: false, msg: error.toString(), data: null };
+    }
+
+    return result;
+}
+
+async function updateUserProfile(formData) {
+    const data = {
+        image_data: formData.get('image_base64'),
+        username: formData.get('username'),
+        bio: formData.get('bio')
+    }
+    try{
+        const response = await fetch(BASE_URL + UPDATE_USERPROFILE_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+            },
+            body: JSON.stringify(data)
+        })
+
+        var result = {}
+        if (response.status === 201) {
+            //cookies().set('jwt', await response.json())
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
+async function updateUserAuthenticators(formData) {
+    const data = {
+        email: formData.get('email'),
+        password: formData.get('password'),
+        new_email: formData.get('new_email'),
+        new_password: formData.get('new_password')
+    }
+
+    try{
+        const response = await fetch(BASE_URL + UPDATE_USERAUTH_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+            },
+            body: JSON.stringify(data)
+        })
+
+        var result = {}
+        if (response.status === 201) {
+            //cookies().set('jwt', await response.json())
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 404, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+
+    return result
+}
+
 export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
     createGroup, getGroups, getGroup, joinGroup, getJoinGroup, createTask, getTasks, 
-    getTask, editTask, deleteTask, createComment, getComments}
+    getTask, editTask, deleteTask, createComment, getComments,
+    getUserProfile, updateUserProfile, updateUserAuthenticators}

@@ -1,4 +1,5 @@
 'use client'
+<<<<<<< HEAD
 import { redirect } from "next/navigation"
 import { GroupOverview, GroupList } from "../../components/group"
 import { TaskBoard } from "../../components/task"
@@ -65,6 +66,54 @@ export default function SpecificGroupPage({ params }) {
                             <SendComment channel={params.code} onUpdate={()=>setCommentUpdated(commentUpdated+1)}/>
                         </div>
                     </div>
+=======
+import { useEffect, useState } from "react"
+import { inviteUser } from "../../lib/actions"
+import { GroupList } from "../../components/group"
+import { TaskList, CreateTask } from "../../components/task"
+
+export default function GroupPage({ params }) {
+
+    const [joinURL, setJoinURL] = useState(null);
+    const [isLoading, setisLoading] = useState(true);
+    const [currentTask, setCurrentTask] = useState(null);
+
+    const invite = async () => {
+        try {
+            const data = await inviteUser(params.code); 
+            setJoinURL(data.joinUrl); 
+        } catch (error) {
+            console.error("Error inviting user:", error);
+        }
+        setisLoading(false);
+    };
+    if(isLoading){
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
+    return (
+        <>
+            <div className="min-h-screen flex">
+                <GroupList/>
+                <div className="flex flex-col p-4">
+                    <p>{ params.code }</p>
+                    <TaskList channel={params.code} onEditTask={setCurrentTask} />
+                    <CreateTask channel={params.code}/>
+                    {currentTask && <EditTask channel={params.code} task={currentTask} onCancel={() => setCurrentTask(null)} />}
+                    <button 
+                        className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out"
+                        onClick={invite}
+                    >
+                        Invite Members
+                    </button>
+                    {joinURL && (
+                        <div className="mt-4 p-2 bg-gray-100 rounded">
+                            <p>Invite Link:</p>
+                            <a href={joinURL} target="_blank" rel="noopener noreferrer" className="break-all text-blue-500 hover:text-blue-700">
+                                {joinURL}
+                            </a>
+                        </div>
+                    )}
+>>>>>>> edit-profile
                 </div>
 
             </div>
