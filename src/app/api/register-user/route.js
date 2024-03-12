@@ -1,11 +1,7 @@
 import pool from "../middleware/database"
 import bcrypt from 'bcryptjs'
 
-<<<<<<< HEAD
 export async function POST ( req ){
-=======
-export async function POST(req) {
->>>>>>> edit-profile
     const {email, password, username, firstname, lastname} = await req.json()
 
     if (!isValidEmail(email)) {
@@ -25,7 +21,6 @@ export async function POST(req) {
     
     // SQL query to look up the email
     const lookup_query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1'
-<<<<<<< HEAD
 
     // SQL query to insert the user with data
     const insert_query = `
@@ -33,12 +28,6 @@ export async function POST(req) {
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *`
 
-=======
-    const insert_user_query = `
-    INSERT INTO Users (email, password_hash, username, first_name, last_name, profile_picture_url, bio)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
-    RETURNING id, username, email, first_name, last_name, profile_picture_url, bio`
->>>>>>> edit-profile
 
     try {
         const lookupResponse = await pool.query(lookup_query, [email])
@@ -55,11 +44,7 @@ export async function POST(req) {
         }
     } catch (error) {
         console.log(error)
-<<<<<<< HEAD
         return new Response(null, { status: 500, statusText: "An unexpected error has occurred."})
-=======
-        return new Response(null, { status: 500, statusText: "An internal error has occurred."})
->>>>>>> edit-profile
     }
 }
 
