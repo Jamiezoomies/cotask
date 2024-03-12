@@ -45,7 +45,7 @@ function EditProfile() {
                 document.getElementById("profile_img").value = "";
                 img.src = profileData.image;
                 setError(true);
-                setMessage("Invalid image dimensions. Image must be 420x420.");
+                setMessage("Invalid image dimensions. Image must be under 420x420 pixels.");
             }
         }
 
@@ -109,6 +109,7 @@ function EditProfile() {
                     type="text"
                     name="username"
                     defaultValue={profileData.username}
+                    maxLength="20"
                     required
                 />
                 <p className="block text-center text-gray-400 text-md font-bold py-3">
@@ -120,6 +121,7 @@ function EditProfile() {
                     name="bio"
                     defaultValue={profileData.bio}
                     rows={2}
+                    maxLength="80"
                 />
                 <div className="flex flex-row items-center gap-1 pt-3">
                     <button className="w-full bg-gray-800 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
