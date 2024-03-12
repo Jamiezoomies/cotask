@@ -14,22 +14,26 @@ export async function POST(req) {
 
     const {image_data, username, bio} = await req.json()
 
-    const buffer = Buffer.from(image_data, 'base64')
-    const imagepath = "/uploads/" + userId + "/profile.png";
+    let imagepath = null;
+    if (image_data !== "") {
+        const buffer = Buffer.from(image_data, 'base64')
+        imagepath = "/uploads/" + userId + "/profile.png";
 
-    try {
-        await writeFile(path.join(process.cwd(), "public" + imagepath), buffer);
-    }
-    catch (error) {
-        await mkdir("public/uploads/" + userId);
-        await writeFile(path.join(process.cwd(), "public" + imagepath), buffer);
+        try {
+            await writeFile(path.join(process.cwd(), "public" + imagepath), buffer);
+        } catch (error) {
+            await mkdir("public/uploads/" + userId, {recursive: true});
+            await writeFile(path.join(process.cwd(), "public" + imagepath), buffer);
+        }
     }
 
     const userValues = [imagepath, username, bio, userId]
 
     const query = `
     UPDATE Users
-    SET profile_picture_url = $1, username = $2, bio = $3
+    SET profile_picture_url = COALESCE($1, profile_picture_url), 
+        username = $2, 
+        bio = $3
     WHERE id = $4`;
 
     try {

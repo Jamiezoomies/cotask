@@ -56,8 +56,14 @@ function EditProfile() {
             false
         );
 
-        if (formData.get('profile_img')) {
+        if (formData.get('profile_img').size !== 0) {
             reader.readAsDataURL(formData.get('profile_img'));
+        }
+        else {
+            formData.append('image_base64', "");
+            const response = await updateUserProfile(formData)
+            setError(!response.ok)
+            setMessage(response.msg)
         }
     }
 
@@ -69,7 +75,7 @@ function EditProfile() {
             <Message isError={isError} text={message}/>
             <form className="bg-white max-w-sm shadow-md rounded px-4 pt-10 pb-6 mb-4" action={saveChanges}>
                 <div className="relative w-1/2 mx-auto overflow-hidden rounded-full bg-black">
-                    <label for="profile_img">
+                    <label htmlFor="profile_img">
                         <img className="peer h-full w-full object-cover hover:opacity-50" src={profileData.image}/>
                         <p className="absolute pointer-events-none invisible peer-hover:visible block w-full top-1/2 object-cover text-center text-gray-400 text-md px-3">Upload Photo</p>
                     </label>
@@ -81,6 +87,7 @@ function EditProfile() {
                        width="420"
                        name="profile_img"
                        onChange={() => previewProfilePicture(this)}
+                       defaultValue={""}
                     />
                 </div>
                 <input className="shadow appearance-none border rounded w-full text-xl text-center font-bold text-gray-700 pt-3 focus:outline-none focus:shadow-outline"
