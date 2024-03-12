@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getSession } from "../lib/actions"
+import { LogoutButton } from "./sign";
 
 async function Navbar() {
 
@@ -11,10 +12,9 @@ async function Navbar() {
     }
 
     return (
-        //"flex items-center sticky top-0 self-center mx-0 py-6 bg-transparent backdrop-blur rounded-b border border-black"
-        <div className="flex items-center fixed w-screen top-0 self-center mx-0 py-6 px-4 rounded-b border border-gray-300 bg-gray-100">
+        <div className="flex items-center fixed w-screen top-0 self-center mx-0 py-4 px-4 border border-gray-300 bg-gray-100">
             <Link href="/">
-                <p className="block text-center text-gray-800 text-md font-bold px-6">
+                <p className="block text-center text-gray-800 text-md font-bold px-6 text-xl">
                     CoTask
                 </p>
             </Link>
