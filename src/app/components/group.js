@@ -67,8 +67,8 @@ function GroupList({ channel }) {
 function GroupOverview({ group }) {
     return (
         <>
-        <h1 className="font-medium text-2xl py-4 px-1">Group Channel</h1>
-        <div className="flex bg-blue-100 flex-col p-4 bg-white rounded-lg shadow-md shadow-lg border border-gray-300">
+        <h1 className="font-medium text-2xl py-4">Group Channel</h1>
+        <div className="flex flex-col bg-gray-00 rounded-lg">
             <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-900">Name</label>

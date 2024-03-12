@@ -16,6 +16,10 @@ const EDIT_TASK_API_URL = '/api/edit-task'
 const DELETE_TASK_API_URL = '/api/delete-task'
 const JOIN_GROUP_API_URL = '/api/join-group'
 const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
+const GET_COMMENTS_API_URL = '/api/get-comments'
+const CREATE_COMMENT_API_URL = '/api/create-comment'
+
+
 const TOKEN_TYPE = 'Bearer'
 const SESSION_COOKIE_NAME = 'jwt'
 
@@ -342,6 +346,51 @@ async function deleteTask(channel, id) {
     return result
 }
 
+async function createComment(data) {
+    try{
+        const response = await fetch(BASE_URL + CREATE_COMMENT_API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': getAuth()
+            },
+            body: JSON.stringify(data)
+        })
+
+        if (response.status === 201) {
+            return {ok: true, msg: response.statusText, data: await response.json()}
+        } else if ([401, 500].includes(response.status)) {
+            return { ok: false, msg: response.statusText, data: null}
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    return { ok: false, msg: "Unexpected error has occurred", data: null }
+}
+
+async function getComments(code, query) {
+    try{
+        const params = `?code=${code}&query=${query}`;
+        const response = await fetch(BASE_URL + GET_COMMENTS_API_URL + params, {
+            method: 'GET',
+            headers: {
+                'Authorization': getAuth()
+            }
+        })
+        
+        if (response.status === 200) {
+            return { ok: true, status: response.status, msg: response.statusText, data: await response.json()}
+        } else if ([401, 500].includes(response.status)) {
+            return { ok: false, status: response.status, msg: response.statusText, data: null}
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    return { ok: false, msg: "Unexpected error has occurred", data: null }
+}
+
 export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
     createGroup, getGroups, getGroup, joinGroup, getJoinGroup, createTask, getTasks, 
-    getTask, editTask, deleteTask}
+    getTask, editTask, deleteTask, createComment, getComments}
