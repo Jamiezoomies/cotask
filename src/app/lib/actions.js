@@ -394,12 +394,11 @@ async function getComments(code, query) {
 
 async function getUserProfile() {
     try {
-        const token = cookies().get('jwt')?.value; 
         const response = await fetch(BASE_URL + GET_USERPROFILE_API_URL, {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `${TOKEN_TYPE} ${token}`
+                'Authorization': getAuth()
             }
         });
 
@@ -430,7 +429,7 @@ async function updateUserProfile(formData) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+                'Authorization': getAuth()
             },
             body: JSON.stringify(data)
         })
@@ -463,7 +462,7 @@ async function updateUserAuthenticators(formData) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${TOKEN_TYPE} ${cookies().get('jwt')?.value}`
+                'Authorization': getAuth()
             },
             body: JSON.stringify(data)
         })
