@@ -83,12 +83,6 @@ function TaskList({ title, tasks, onSelect }) {
                             <span className="text-base font-medium">{task.title}</span>
                             <span className="text-xs font-medium">{task.description}</span>
                         </div>
-                        <button 
-                            onClick={() => onEditTask(task)}
-                            className="ml-auto py-1 px-3 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 ease-in-out"
-                        >
-                            Edit
-                        </button>
                     </li>
                 ))}
             </ul>
