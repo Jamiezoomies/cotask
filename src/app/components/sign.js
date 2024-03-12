@@ -14,13 +14,7 @@ function SignupForm() {
         const session = await getSession()
         if (session?.ok) {
             redirectTo('/group')
-        } else {
-            setLoading(false)
         }
-    }
-    
-    if (isLoading) { 
-        return (<Loading/>) 
     }
 
     return (
