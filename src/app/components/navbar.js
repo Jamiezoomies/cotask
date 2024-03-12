@@ -22,8 +22,8 @@ async function Navbar() {
             {/*Left Side*/}
             {[
                 ['Team', '/team'],
-            ].map(([title, url]) => (
-                <Link href={url}>
+            ].map(([title, url], index) => (
+                <Link key={index} href={url}>
                     <p className="block text-center text-gray-800 hover:text-blue-400 text-md font-bold px-6">{title}</p>
                 </Link>
             ))}
@@ -34,11 +34,17 @@ async function Navbar() {
             {[
                 [ navBarItems[0], navBarItems[1]],
                 [ navBarItems[2], navBarItems[3]],
-            ].map(([title, url]) => (
-                <Link href={url}>
+            ].map(([title, url], index) => (
+                <Link key={index} href={url}>
                     <p className="block text-center text-gray-800 hover:text-blue-400 text-md font-bold px-6">{title}</p>
                 </Link>
             ))}
+            {/*Logout*/}
+            { session && session?.ok && 
+                <div>
+                    <LogoutButton/>
+                </div>
+            }
         </div>
     )
 }

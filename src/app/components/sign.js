@@ -185,7 +185,7 @@ function SigninForm({ session }) {
 function LogoutButton() {
     return (
         <button 
-            className="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            className="w-full font-bold py-2 px-4 rounded text-gray-800 hover:text-blue-400"
             onClick={() => {handleLogout(); redirectTo('/signin')}}>
             Logout
         </button>

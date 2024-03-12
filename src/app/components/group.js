@@ -41,7 +41,6 @@ function GroupList({ channel }) {
             <GroupCreation onUpdate={()=>setUpdate(update + 1)}/>
         </Modal>
         <div className="bg-gray-900 w-48 text-white p-2">
-            <LogoutButton/>
             <button className="text font-bold text-black bg-gray-200 py-4 w-full my-2 rounded hover:bg-gray-300 shadow" onClick={()=>setOpenCreation(true)}>New Group</button>
             <h2 className="p-2 text-center font-semibold">Group Channels</h2>
             <ul className="flex flex-col">
