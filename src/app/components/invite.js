@@ -96,8 +96,10 @@ function LinkToJoin() {
   function join () {
     // Assuming the groupCode is a part of the URL you want to navigate to
     const url = `/group/${groupCode}/join`;
-    // Redirect to the URL
-    window.location.href = url;
+    if (groupCode !== '') {
+      // Redirect to the URL
+      window.location.href = url;
+    }
   }
 
   return(
