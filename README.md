@@ -91,6 +91,7 @@ Git
         `/group`: Displays a list of groups that the user is a part of or has access to.
         `/group/[code]`: A dynamic route that shows the details of a specific group identified by its unique code. In addition, the task management and comment system is equipped within this route.
         `/group/[code]/join`: This route is used for joining a specific group. It may be accessed through an invitation link or a direct action from within the application.
+        `/team`: Te team page which lists our project members' names and respective GitHub usernames. 
         
     Components:
 
@@ -116,6 +117,10 @@ Git
     CommentsList: Shows all comments related to a task.
     SendComment: A form for submitting new comments.
     SearchComment: Allows users to search through comments.
+
+    HomePage: An informative home for users before they sign in.
+    Navbar: A navbar to allow users to traverse pages, logout, and join groups easily.
+    Team: A table of our members' names and respective GitHub usernames.
 
 
 
@@ -197,3 +202,5 @@ Fernando Torres Vargas (ftorresvargas@g.ucla.edu)
 
 
 # Project Video
+
+To be submitted in our final reports.
