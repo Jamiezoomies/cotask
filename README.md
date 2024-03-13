@@ -201,9 +201,18 @@ Fernando Torres Vargas (ftorresvargas@g.ucla.edu)
 
 # Examples of Project Behaviors (Images/Screenshots)
 
-<img src="public/home.png" width="500" height="300" alt="Home page">
-
-
+![Home](./screenshots/home.jpg)
+![Signin](./screenshots/signin.jpg)
+![Signup](./screenshots/signup.jpg)
+![Main page](./screenshots/main.jpg)
+![Create group](./screenshots/create-group.jpg)
+![Group page - task and comment](./screenshots/group.jpg)
+![Group details Info](./screenshots/group-details.jpg)
+![Join group](./screenshots/join-group.jpg)
+![Add task](./screenshots/add-task.jpg)
+![Edit and delete task](./screenshots/edit-delete-task.jpg)
+![Edit profile](./screenshots/edit-profile.jpg)
+![Edit email and password](./screenshots/edit-email-pass.jpg)
 
 
 # Project Video
