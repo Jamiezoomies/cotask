@@ -50,7 +50,7 @@ export default function SpecificGroupPage({ params }) {
 
     return (
         <>
-            <div className="min-h-max flex pt-16">
+            <div className="min-h-max flex">
                 <GroupList channel={params.code}/>
                 <div className="flex flex-col w-full p-4 space-y-4">
                     <div className="shadow-lg p-4 border-gray-300 rounded-lg border">
