@@ -92,7 +92,10 @@ Git
         `/group/[code]`: A dynamic route that shows the details of a specific group identified by its unique code. In addition, the task management and comment system is equipped within this route.
         `/group/[code]/join`: This route is used for joining a specific group. It may be accessed through an invitation link or a direct action from within the application.
         `/team`: Te team page which lists our project members' names and respective GitHub usernames. 
-        
+        `/userprofile`: A customizable page that displays personal information about the current user.
+        `/editprofile`: A page where users can edit the basic information of their profile.
+        `/edit-email-password`: A page where users can change their account's email and password.
+    
     Components:
 
     TaskList: Displays a list of tasks within a group or project.
@@ -122,7 +125,9 @@ Git
     Navbar: A navbar to allow users to traverse pages, logout, and join groups easily.
     Team: A table of our members' names and respective GitHub usernames.
 
-
+    UserProfile: Displays the personal information of a user.
+    EditProfile: An interface for editing a user's profile.
+    EditEmailPassword: A form for changing a user's email and password.
 
 3. Datastore
 
