@@ -12,6 +12,9 @@ CoTask
 ## Project Overview
 This application, developed as a React web application, aims to streamline task management, providing users with an easily accessible and user-friendly platform for sharable task management. Users can group together by creating a server and joining through a QR code or link, fostering seamless collaboration. This enables group members not only to create tasks but also to share them with one another, promoting efficient teamwork. The ability to make comments or log progress updates ensures clear communication within the group.
 
+## Git Repository Link
+[https://github.com/Jamiezoomies/cotask](https://github.com/Jamiezoomies/cotask)
+
 ## Key Features
 1. User authentication
     Enable secure access to the system by allowing users to create accounts with unique credentials and authenticate themselves during logins.
