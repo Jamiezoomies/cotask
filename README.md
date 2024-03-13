@@ -196,7 +196,7 @@ Fernando Torres Vargas (ftorresvargas@g.ucla.edu)
 
 # Examples of Project Behaviors (Images/Screenshots)
 
-
+![Homepage](public/home.png "Home page")
 
 
 
