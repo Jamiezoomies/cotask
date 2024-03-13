@@ -39,7 +39,7 @@ This application, developed as a React web application, aims to streamline task 
 - Git
 
 
-##Installation
+## Installation
 
 1. Clone the repository
 ```
@@ -80,23 +80,23 @@ npm run dev
 
 ## Backend
 ### APIs
-- `GET    /api/session`:  Retrieves the current users' session info[^1].
-- `GET    /api/get-group`: Fetches details of a specific group by its ID[^1].
-- `GET    /api/get-groups`: Retrieves a list of all groups available[^1].
-- `GET    /api/get-join-group`: Checks if a user can join a specified group[^1].
-- `GET    /api/get-task`: Fetches details of a specific task by its ID[^1].
-- `GET    /api/get-tasks`:  Retrieves a list of tasks within a specific group[^1].
-- `GET    /api/get-comments`: Fetches comments related to a specific task[^1].
+- `GET    /api/session`:  Retrieves the current users' session info*.
+- `GET    /api/get-group`: Fetches details of a specific group by its ID*.
+- `GET    /api/get-groups`: Retrieves a list of all groups available*.
+- `GET    /api/get-join-group`: Checks if a user can join a specified group*.
+- `GET    /api/get-task`: Fetches details of a specific task by its ID*.
+- `GET    /api/get-tasks`:  Retrieves a list of tasks within a specific group*.
+- `GET    /api/get-comments`: Fetches comments related to a specific task*.
 - `POST   /api/signin-user`: Authenticates a user and initiates a session.
 - `POST   /api/register-user`: Registers a new user.
-- `POST   /api/create-group`: Creates a new group for users to join[^1].
-- `POST   /api/join-group`: Adds a user to an existing group[^1].
-- `POST   /api/create-task`: Creates a new task within a group[^1].
-- `POST   /api/create-comment`: Adds a comment to a group[^1].
-- `PUT    /api/edit-task`: Updates the details of an existing task[^1].
-- `DELETE /api/delete-task`: Removes a task within a group[^1].
+- `POST   /api/create-group`: Creates a new group for users to join*.
+- `POST   /api/join-group`: Adds a user to an existing group*.
+- `POST   /api/create-task`: Creates a new task within a group*.
+- `POST   /api/create-comment`: Adds a comment to a group*.
+- `PUT    /api/edit-task`: Updates the details of an existing task*.
+- `DELETE /api/delete-task`: Removes a task within a group*.
 
-[^1]: Require JWT authentication token.
+*: Requires JWT authentication token.
 
 
 ## Frontend
