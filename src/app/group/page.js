@@ -3,6 +3,11 @@ import { redirect } from "next/navigation"
 import { GroupList } from "../components/group"
 import { getSession, getGroups } from "../lib/actions"
 
+export const metadata = {
+    title: "Group",
+    description: "Group page"
+  };
+
 export default async function GroupPage() {
     // retrieve session and group on mount from server side.
     const session = await getSession()

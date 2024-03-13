@@ -1,4 +1,8 @@
 // Contributors page
+export const metadata = {
+  title: "Team",
+  description: "Team page"
+};
 export default function Team() {
 
   return (

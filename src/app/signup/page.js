@@ -2,6 +2,11 @@ import { redirect } from "next/navigation";
 import { SignupForm } from "../components/sign"
 import { getSession } from "../lib/actions";
 
+export const metadata = {
+  title: "Signup",
+  description: "Signup page"
+};
+
 export default async function SignUp() {
   // retrieve a session
   const session = await getSession()
