@@ -4,7 +4,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { useState } from "react"
 
 // Group channel comments list
-function CommentsList({ channel, comments, onSearch }) {
+function CommentsList({ channel, comments, onSearch, onUpdate }) {
     return (
         <>
             <div className="flex flex-row items-end justify-between">
@@ -22,7 +22,7 @@ function CommentsList({ channel, comments, onSearch }) {
                         <span className="text-xs font-semibold text-gray-900">{comment.username}</span>
                         <div className="flex flex-col items-end">
                         <span className="text-xs text-gray-500">{comment.created_at.slice(0, 10)}</span>
-                            <CommentDeleteButton channel={channel} id={comment.id}/>
+                            <CommentDeleteButton channel={channel} id={comment.id} onUpdate={onUpdate}/>
                         </div>
                     </div>
                     <p className="mt-1 text-sm text-gray-600">{comment.text}</p>
@@ -106,9 +106,12 @@ function SearchComment({ onSearch }) {
 
 
 // Button to delete the comment
-function CommentDeleteButton({ channel, id}) {
+function CommentDeleteButton({ channel, id, onUpdate}) {
     async function handleDelete() {
         const response = await deleteComment(channel, id)
+        if (response?.ok){
+            onUpdate()
+        }
         return response;
     } 
     return (
