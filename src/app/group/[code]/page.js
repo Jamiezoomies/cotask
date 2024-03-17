@@ -61,7 +61,7 @@ export default function SpecificGroupPage({ params }) {
                             <TaskBoard channel={params.code}/>
                         </div>
                         <div className="shadow-lg p-4 border-gray-300 rounded-lg border">
-                            <CommentsList comments={comments?.data} onSearch={setQuery}/>
+                            <CommentsList channel={params.code} comments={comments?.data} onSearch={setQuery}/>
                             <SendComment channel={params.code} onUpdate={()=>setCommentUpdated(commentUpdated+1)}/>
                         </div>
                     </div>

@@ -21,6 +21,7 @@ const JOIN_GROUP_API_URL = '/api/join-group'
 const GET_JOIN_GROUP_API_URL = '/api/get-join-group'
 const GET_COMMENTS_API_URL = '/api/get-comments'
 const CREATE_COMMENT_API_URL = '/api/create-comment'
+const DELETE_COMMENT_API_URL = '/api/delete-comment'
 const GET_USERPROFILE_API_URL = '/api/get-userprofile'
 const UPDATE_USERPROFILE_API_URL = '/api/update-userprofile'
 const UPDATE_USERAUTH_API_URL = '/api/update-userauthenticators'
@@ -347,6 +348,29 @@ async function deleteTask(channel, id) {
     return result
 }
 
+async function deleteComment(channel, id){
+    try{
+        const params = `?channel=${channel}&id=${id}`
+        const response = await fetch(BASE_URL + DELETE_COMMENT_API_URL + params, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': getAuth()
+            }
+        })
+        var result = {}
+        if (response.status === 200) {
+            result = { ok: true, msg: response.statusText };
+        } else if ([401, 500].includes(response.status)) {
+            result = { ok: false, msg: response.statusText};
+        } else {
+            result = { ok: false, msg: "Unexpected error has occurred" };
+        }
+    } catch(error){
+        console.log(error)
+    }
+    return result
+}
+
 async function createComment(data) {
     try{
         const response = await fetch(BASE_URL + CREATE_COMMENT_API_URL, {
@@ -485,5 +509,5 @@ async function updateUserAuthenticators(formData) {
 
 export { getAuth, handleSignIn, handleSignUp, handleLogout, getSession, redirectTo,
     createGroup, getGroups, getGroup, joinGroup, getJoinGroup, createTask, getTasks, 
-    getTask, editTask, deleteTask, createComment, getComments,
+    getTask, editTask, deleteTask, createComment, getComments, deleteComment,
     getUserProfile, updateUserProfile, updateUserAuthenticators}

@@ -1,9 +1,10 @@
 'use client'
-import { createComment, getComments } from "../lib/actions"
+import { deleteComment, createComment, getComments } from "../lib/actions"
+import { TrashIcon } from '@heroicons/react/solid';
 import { useState } from "react"
 
 // Group channel comments list
-function CommentsList({ comments, onSearch }) {
+function CommentsList({ channel, comments, onSearch }) {
     return (
         <>
             <div className="flex flex-row items-end justify-between">
@@ -18,8 +19,11 @@ function CommentsList({ comments, onSearch }) {
                 >
                 <div className="flex flex-col flex-grow">
                     <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-gray-900">{comment.username}</span>
-                    <span className="text-xs text-gray-500">{comment.created_at.slice(0, 10)}</span>
+                        <span className="text-xs font-semibold text-gray-900">{comment.username}</span>
+                        <div className="flex flex-col items-end">
+                        <span className="text-xs text-gray-500">{comment.created_at.slice(0, 10)}</span>
+                            <CommentDeleteButton channel={channel} id={comment.id}/>
+                        </div>
                     </div>
                     <p className="mt-1 text-sm text-gray-600">{comment.text}</p>
                 </div>
@@ -99,4 +103,19 @@ function SearchComment({ onSearch }) {
         </div>
     )
 }
-export { CommentsList, SendComment, SearchComment }
+
+
+// Button to delete the comment
+function CommentDeleteButton({ channel, id}) {
+    async function handleDelete() {
+        const response = await deleteComment(channel, id)
+        return response;
+    } 
+    return (
+        <button onClick={handleDelete} className="text-gray-400 hover:text-red-500 mt-1">
+            <TrashIcon className="h-5 w-5" />
+        </button>
+    )
+}
+
+export { CommentsList, SendComment, SearchComment, CommentDeleteButton }
